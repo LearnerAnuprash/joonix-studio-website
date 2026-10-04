@@ -15,7 +15,7 @@ test.describe("theme", () => {
     await expect(toggle).toHaveAttribute("aria-pressed", "false");
     await expect(page.locator('meta[name="theme-color"]')).toHaveAttribute(
       "content",
-      "#E1DCC9",
+      "#FFFFFF",
     );
     await page.reload();
     await expect(page.locator("html")).toHaveAttribute("data-theme", "light");

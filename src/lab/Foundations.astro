@@ -13,6 +13,7 @@ import {
   XIcon,
 } from "lucide-react";
 
+import { Ambient, type AmbientVariant } from "@/components/brand/Ambient";
 import { ContrastReadout } from "@/components/lab/ContrastReadout";
 import { LabSection } from "@/components/lab/LabSection";
 import { ToneSample } from "@/components/lab/ToneSample";
@@ -22,8 +23,15 @@ import { Input } from "@/components/ui/input";
 import PageLayout from "@/layouts/PageLayout.astro";
 import { palette } from "@/styles/palette";
 
+const ambientVariants: { id: AmbientVariant; title: string }[] = [
+  { id: "horizon", title: "Horizon" },
+  { id: "corner", title: "Corner" },
+  { id: "soft", title: "Soft" },
+];
+
 const swatches = [
   { name: "Black", value: palette.black, token: "bg-(--c-black)" },
+  { name: "White", value: palette.white, token: "bg-(--c-white)" },
   { name: "Ink", value: palette.ink, token: "bg-(--c-ink)" },
   { name: "Earth", value: palette.earth, token: "bg-(--c-earth)" },
   { name: "Cream", value: palette.cream, token: "bg-(--c-cream)" },
@@ -128,7 +136,7 @@ const columns = Array.from({ length: 12 }, (_, index) => index + 1);
 
 <PageLayout title="Foundations" noindex>
   <LabSection id="palette" title="Palette">
-    <ul class="grid grid-cols-2 gap-4 lg:grid-cols-4">
+    <ul class="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5">
       {swatches.map((swatch) => (
         <li class="flex flex-col gap-3">
           <span
@@ -165,6 +173,28 @@ const columns = Array.from({ length: 12 }, (_, index) => index + 1);
               <ContrastReadout slot="readout" client:load />
             </ToneSample>
           ))}
+        </div>
+      </div>
+    ))}
+  </LabSection>
+
+  <LabSection id="ambient" title="Ambient">
+    {themes.map((theme) => (
+      <div class="flex flex-col gap-6">
+        <h3 class="text-h3">{theme.title}</h3>
+        <div data-theme={theme.id} class="grid gap-4 md:grid-cols-2">
+          {tones.map((tone) =>
+            ambientVariants.map((variant) => (
+              <div
+                data-tone={tone.id}
+                class="relative isolate flex aspect-[16/9] flex-col justify-end gap-1 overflow-hidden rounded-lg border border-border p-6"
+              >
+                <Ambient variant={variant.id} />
+                <p class="text-h4">{variant.title}</p>
+                <p class="text-sm text-muted-foreground">{tone.title}</p>
+              </div>
+            )),
+          )}
         </div>
       </div>
     ))}

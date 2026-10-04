@@ -31,7 +31,7 @@ export function SiteHeader({
     <header
       data-tone={tone}
       data-review-id="G-01"
-      className="sticky top-0 z-40 h-(--header-h) scroll-hairline border-b"
+      className="sticky top-0 z-40 h-(--header-h) border-b header-scroll"
     >
       <Container className="flex h-full items-center justify-between gap-6">
         <a href="/" aria-label={`${siteName}, home`} className="rounded-md">

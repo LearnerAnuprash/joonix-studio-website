@@ -1,10 +1,14 @@
 :root {
   --c-black: #000000;
+  --c-white: #ffffff;
   --c-ink: #1f150c;
   --c-earth: #412d15;
   --c-cream: #e1dcc9;
-  --c-cream-rgb: 225 220 201;
+  --c-black-rgb: 0 0 0;
+  --c-white-rgb: 255 255 255;
   --c-ink-rgb: 31 21 12;
+  --c-earth-rgb: 65 45 21;
+  --c-cream-rgb: 225 220 201;
 
   --on-dark-text: var(--c-cream);
   --on-dark-text-soft: rgb(var(--c-cream-rgb) / 0.7);
@@ -26,18 +30,27 @@
   --on-light-btn-hover-bg: transparent;
   --on-light-btn-hover-fg: var(--c-ink);
 
-  --black-scheme: dark;
-  --black-bg: var(--c-black);
-  --black-surface: var(--c-ink);
-  --black-text: var(--on-dark-text);
-  --black-text-soft: var(--on-dark-text-soft);
-  --black-line: var(--on-dark-line);
-  --black-line-strong: var(--on-dark-line-strong);
-  --black-ring: var(--on-dark-ring);
-  --black-btn-bg: var(--on-dark-btn-bg);
-  --black-btn-fg: var(--on-dark-btn-fg);
-  --black-btn-hover-bg: var(--on-dark-btn-hover-bg);
-  --black-btn-hover-fg: var(--on-dark-btn-hover-fg);
+  --on-white-text: var(--c-black);
+  --on-white-text-soft: rgb(var(--c-black-rgb) / 0.64);
+  --on-white-line: rgb(var(--c-black-rgb) / 0.12);
+  --on-white-line-strong: rgb(var(--c-black-rgb) / 0.48);
+  --on-white-ring: var(--c-black);
+  --on-white-btn-bg: var(--c-black);
+  --on-white-btn-fg: var(--c-white);
+  --on-white-btn-hover-bg: transparent;
+  --on-white-btn-hover-fg: var(--c-black);
+
+  --on-black-text: var(--c-white);
+  --on-black-text-soft: rgb(var(--c-white-rgb) / 0.72);
+  --on-black-line: rgb(var(--c-white-rgb) / 0.16);
+  --on-black-line-strong: rgb(var(--c-white-rgb) / 0.45);
+  --on-black-ring: var(--c-white);
+  --on-black-btn-bg: var(--c-white);
+  --on-black-btn-fg: var(--c-black);
+  --on-black-btn-hover-bg: transparent;
+  --on-black-btn-hover-fg: var(--c-white);
+
+  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.5 0 0 0 0 0.5 0 0 0 0 0.5 0 0 0 1 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
 :root,
@@ -54,6 +67,11 @@
   --base-btn-fg: var(--on-dark-btn-fg);
   --base-btn-hover-bg: var(--on-dark-btn-hover-bg);
   --base-btn-hover-fg: var(--on-dark-btn-hover-fg);
+  --base-core: rgb(var(--c-cream-rgb) / 0.16);
+  --base-glow: color-mix(in oklab, var(--c-earth) 82%, var(--c-cream));
+  --base-haze: rgb(var(--c-cream-rgb) / 0.045);
+  --base-grain: 0.045;
+  --base-blend: screen;
 
   --deep-scheme: dark;
   --deep-bg: var(--c-black);
@@ -67,6 +85,11 @@
   --deep-btn-fg: var(--on-dark-btn-fg);
   --deep-btn-hover-bg: var(--on-dark-btn-hover-bg);
   --deep-btn-hover-fg: var(--on-dark-btn-hover-fg);
+  --deep-core: rgb(var(--c-cream-rgb) / 0.2);
+  --deep-glow: color-mix(in oklab, var(--c-earth) 80%, var(--c-cream));
+  --deep-haze: rgb(var(--c-cream-rgb) / 0.045);
+  --deep-grain: 0.05;
+  --deep-blend: screen;
 
   --inverse-scheme: light;
   --inverse-bg: var(--c-cream);
@@ -80,47 +103,103 @@
   --inverse-btn-fg: var(--on-light-btn-fg);
   --inverse-btn-hover-bg: var(--on-light-btn-hover-bg);
   --inverse-btn-hover-fg: var(--on-light-btn-hover-fg);
+  --inverse-core: rgb(var(--c-white-rgb) / 0.7);
+  --inverse-glow: rgb(var(--c-white-rgb) / 0.55);
+  --inverse-haze: rgb(var(--c-earth-rgb) / 0.12);
+  --inverse-grain: 0.06;
+  --inverse-blend: multiply;
+
+  --black-scheme: dark;
+  --black-bg: var(--c-black);
+  --black-surface: var(--c-ink);
+  --black-text: var(--on-dark-text);
+  --black-text-soft: var(--on-dark-text-soft);
+  --black-line: var(--on-dark-line);
+  --black-line-strong: var(--on-dark-line-strong);
+  --black-ring: var(--on-dark-ring);
+  --black-btn-bg: var(--on-dark-btn-bg);
+  --black-btn-fg: var(--on-dark-btn-fg);
+  --black-btn-hover-bg: var(--on-dark-btn-hover-bg);
+  --black-btn-hover-fg: var(--on-dark-btn-hover-fg);
+  --black-core: rgb(var(--c-cream-rgb) / 0.12);
+  --black-glow: color-mix(in oklab, var(--c-earth) 85%, var(--c-cream));
+  --black-haze: rgb(var(--c-cream-rgb) / 0.06);
+  --black-grain: 0.05;
+  --black-blend: screen;
 }
 
 [data-theme="light"] {
   --base-scheme: light;
-  --base-bg: var(--c-cream);
-  --base-surface: rgb(var(--c-ink-rgb) / 0.06);
-  --base-text: var(--on-light-text);
-  --base-text-soft: var(--on-light-text-soft);
-  --base-line: var(--on-light-line);
-  --base-line-strong: var(--on-light-line-strong);
-  --base-ring: var(--on-light-ring);
-  --base-btn-bg: var(--on-light-btn-bg);
-  --base-btn-fg: var(--on-light-btn-fg);
-  --base-btn-hover-bg: var(--on-light-btn-hover-bg);
-  --base-btn-hover-fg: var(--on-light-btn-hover-fg);
+  --base-bg: var(--c-white);
+  --base-surface: rgb(var(--c-black-rgb) / 0.04);
+  --base-text: var(--on-white-text);
+  --base-text-soft: var(--on-white-text-soft);
+  --base-line: var(--on-white-line);
+  --base-line-strong: var(--on-white-line-strong);
+  --base-ring: var(--on-white-ring);
+  --base-btn-bg: var(--on-white-btn-bg);
+  --base-btn-fg: var(--on-white-btn-fg);
+  --base-btn-hover-bg: var(--on-white-btn-hover-bg);
+  --base-btn-hover-fg: var(--on-white-btn-hover-fg);
+  --base-core: rgb(var(--c-earth-rgb) / 0.12);
+  --base-glow: rgb(var(--c-cream-rgb) / 0.9);
+  --base-haze: rgb(var(--c-earth-rgb) / 0.08);
+  --base-grain: 0.05;
+  --base-blend: multiply;
 
-  --deep-scheme: dark;
-  --deep-bg: var(--c-ink);
-  --deep-surface: var(--c-earth);
-  --deep-text: var(--on-dark-text);
-  --deep-text-soft: var(--on-dark-text-soft);
-  --deep-line: var(--on-dark-line);
-  --deep-line-strong: var(--on-dark-line-strong);
-  --deep-ring: var(--on-dark-ring);
-  --deep-btn-bg: var(--on-dark-btn-bg);
-  --deep-btn-fg: var(--on-dark-btn-fg);
-  --deep-btn-hover-bg: var(--on-dark-btn-hover-bg);
-  --deep-btn-hover-fg: var(--on-dark-btn-hover-fg);
+  --deep-scheme: light;
+  --deep-bg: var(--c-white);
+  --deep-surface: rgb(var(--c-black-rgb) / 0.04);
+  --deep-text: var(--on-white-text);
+  --deep-text-soft: var(--on-white-text-soft);
+  --deep-line: var(--on-white-line);
+  --deep-line-strong: var(--on-white-line-strong);
+  --deep-ring: var(--on-white-ring);
+  --deep-btn-bg: var(--on-white-btn-bg);
+  --deep-btn-fg: var(--on-white-btn-fg);
+  --deep-btn-hover-bg: var(--on-white-btn-hover-bg);
+  --deep-btn-hover-fg: var(--on-white-btn-hover-fg);
+  --deep-core: rgb(var(--c-earth-rgb) / 0.14);
+  --deep-glow: rgb(var(--c-cream-rgb) / 0.95);
+  --deep-haze: rgb(var(--c-earth-rgb) / 0.1);
+  --deep-grain: 0.06;
+  --deep-blend: multiply;
 
   --inverse-scheme: dark;
-  --inverse-bg: var(--c-earth);
-  --inverse-surface: var(--c-ink);
-  --inverse-text: var(--on-dark-text);
-  --inverse-text-soft: var(--on-dark-text-soft);
-  --inverse-line: var(--on-dark-line);
-  --inverse-line-strong: var(--on-dark-line-strong);
-  --inverse-ring: var(--on-dark-ring);
-  --inverse-btn-bg: var(--on-dark-btn-bg);
-  --inverse-btn-fg: var(--on-dark-btn-fg);
-  --inverse-btn-hover-bg: var(--c-ink);
-  --inverse-btn-hover-fg: var(--on-dark-btn-hover-fg);
+  --inverse-bg: var(--c-black);
+  --inverse-surface: rgb(var(--c-white-rgb) / 0.08);
+  --inverse-text: var(--on-black-text);
+  --inverse-text-soft: var(--on-black-text-soft);
+  --inverse-line: var(--on-black-line);
+  --inverse-line-strong: var(--on-black-line-strong);
+  --inverse-ring: var(--on-black-ring);
+  --inverse-btn-bg: var(--on-black-btn-bg);
+  --inverse-btn-fg: var(--on-black-btn-fg);
+  --inverse-btn-hover-bg: var(--on-black-btn-hover-bg);
+  --inverse-btn-hover-fg: var(--on-black-btn-hover-fg);
+  --inverse-core: rgb(var(--c-cream-rgb) / 0.14);
+  --inverse-glow: color-mix(in oklab, var(--c-earth) 80%, var(--c-cream));
+  --inverse-haze: rgb(var(--c-cream-rgb) / 0.07);
+  --inverse-grain: 0.05;
+  --inverse-blend: screen;
+
+  --black-scheme: dark;
+  --black-bg: var(--c-black);
+  --black-surface: rgb(var(--c-white-rgb) / 0.08);
+  --black-text: var(--on-black-text);
+  --black-text-soft: var(--on-black-text-soft);
+  --black-line: var(--on-black-line);
+  --black-line-strong: var(--on-black-line-strong);
+  --black-ring: var(--on-black-ring);
+  --black-btn-bg: var(--on-black-btn-bg);
+  --black-btn-fg: var(--on-black-btn-fg);
+  --black-btn-hover-bg: var(--on-black-btn-hover-bg);
+  --black-btn-hover-fg: var(--on-black-btn-hover-fg);
+  --black-core: rgb(var(--c-cream-rgb) / 0.12);
+  --black-glow: color-mix(in oklab, var(--c-earth) 85%, var(--c-cream));
+  --black-haze: rgb(var(--c-cream-rgb) / 0.06);
+  --black-grain: 0.05;
+  --black-blend: screen;
 }
 
 [data-tone="base"] {
@@ -136,6 +215,11 @@
   --tone-btn-fg: var(--base-btn-fg);
   --tone-btn-hover-bg: var(--base-btn-hover-bg);
   --tone-btn-hover-fg: var(--base-btn-hover-fg);
+  --tone-core: var(--base-core);
+  --tone-glow: var(--base-glow);
+  --tone-haze: var(--base-haze);
+  --tone-grain: var(--base-grain);
+  --tone-blend: var(--base-blend);
 }
 
 [data-tone="deep"] {
@@ -151,6 +235,11 @@
   --tone-btn-fg: var(--deep-btn-fg);
   --tone-btn-hover-bg: var(--deep-btn-hover-bg);
   --tone-btn-hover-fg: var(--deep-btn-hover-fg);
+  --tone-core: var(--deep-core);
+  --tone-glow: var(--deep-glow);
+  --tone-haze: var(--deep-haze);
+  --tone-grain: var(--deep-grain);
+  --tone-blend: var(--deep-blend);
 }
 
 [data-tone="inverse"] {
@@ -166,6 +255,11 @@
   --tone-btn-fg: var(--inverse-btn-fg);
   --tone-btn-hover-bg: var(--inverse-btn-hover-bg);
   --tone-btn-hover-fg: var(--inverse-btn-hover-fg);
+  --tone-core: var(--inverse-core);
+  --tone-glow: var(--inverse-glow);
+  --tone-haze: var(--inverse-haze);
+  --tone-grain: var(--inverse-grain);
+  --tone-blend: var(--inverse-blend);
 }
 
 [data-tone="black"] {
@@ -181,6 +275,11 @@
   --tone-btn-fg: var(--black-btn-fg);
   --tone-btn-hover-bg: var(--black-btn-hover-bg);
   --tone-btn-hover-fg: var(--black-btn-hover-fg);
+  --tone-core: var(--black-core);
+  --tone-glow: var(--black-glow);
+  --tone-haze: var(--black-haze);
+  --tone-grain: var(--black-grain);
+  --tone-blend: var(--black-blend);
 }
 
 [data-tone] {
@@ -204,8 +303,18 @@
   --border: var(--tone-line);
   --input: var(--tone-line-strong);
   --ring: var(--tone-ring);
-  background-color: var(--background);
-  color: var(--foreground);
+  --ambient-core: var(--tone-core);
+  --ambient-glow: var(--tone-glow);
+  --ambient-haze: var(--tone-haze);
+  --ambient-grain: var(--tone-grain);
+  --ambient-blend: var(--tone-blend);
+}
+
+@layer base {
+  [data-tone] {
+    background-color: var(--background);
+    color: var(--foreground);
+  }
 }
 
 :root {
