@@ -21,7 +21,8 @@
     "placeholders": "node scripts/placeholders.ts",
     "shots": "node scripts/review-shots.ts",
     "test:e2e": "playwright test",
-    "js-budget": "node scripts/js-budget.ts"
+    "js-budget": "node scripts/js-budget.ts",
+    "contrast": "node scripts/contrast-report.ts"
   },
   "dependencies": {
     "@astrojs/markdown-satteri": "0.4.2",
