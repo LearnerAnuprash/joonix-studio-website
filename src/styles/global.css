@@ -1,0 +1,229 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+@import "./tokens.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  --color-*: initial;
+  --shadow-*: initial;
+  --inset-shadow-*: initial;
+  --drop-shadow-*: initial;
+  --text-shadow-*: initial;
+  --blur-*: initial;
+  --ease-*: initial;
+  --breakpoint-*: initial;
+  --text-*: initial;
+
+  --breakpoint-sm: 40rem;
+  --breakpoint-md: 48rem;
+  --breakpoint-lg: 64rem;
+  --breakpoint-xl: 90rem;
+
+  --ease-out: cubic-bezier(0.2, 0, 0, 1);
+
+  --container-content: 75rem;
+  --container-measure: 66ch;
+
+  --text-display: clamp(3rem, 1.667rem + 5.926vw, 7rem);
+  --text-display--line-height: 1.02;
+  --text-display--letter-spacing: -0.04em;
+  --text-display--font-weight: var(--weight-display);
+
+  --text-h1: clamp(2.5rem, 1.833rem + 2.963vw, 4.5rem);
+  --text-h1--line-height: 1.06;
+  --text-h1--letter-spacing: -0.03em;
+  --text-h1--font-weight: 500;
+
+  --text-h2: clamp(2rem, 1.667rem + 1.481vw, 3rem);
+  --text-h2--line-height: 1.12;
+  --text-h2--letter-spacing: -0.02em;
+  --text-h2--font-weight: 500;
+
+  --text-h3: clamp(1.5rem, 1.375rem + 0.556vw, 1.875rem);
+  --text-h3--line-height: 1.25;
+  --text-h3--letter-spacing: -0.015em;
+  --text-h3--font-weight: 500;
+
+  --text-h4: clamp(1.25rem, 1.208rem + 0.185vw, 1.375rem);
+  --text-h4--line-height: 1.35;
+  --text-h4--letter-spacing: -0.01em;
+  --text-h4--font-weight: 500;
+
+  --text-lead: clamp(1.1875rem, 1.125rem + 0.278vw, 1.375rem);
+  --text-lead--line-height: 1.47;
+
+  --text-body: 1.09375rem;
+  --text-body--line-height: 1.75rem;
+
+  --text-small: 0.9375rem;
+  --text-small--line-height: 1.5rem;
+
+  --text-caption: 0.875rem;
+  --text-caption--line-height: 1.25rem;
+  --text-caption--letter-spacing: 0.005em;
+
+  --text-xs: 0.875rem;
+  --text-xs--line-height: 1.25rem;
+  --text-sm: 0.9375rem;
+  --text-sm--line-height: 1.5rem;
+  --text-base: 1.09375rem;
+  --text-base--line-height: 1.75rem;
+  --text-lg: clamp(1.1875rem, 1.125rem + 0.278vw, 1.375rem);
+  --text-lg--line-height: 1.47;
+  --text-xl: clamp(1.25rem, 1.208rem + 0.185vw, 1.375rem);
+  --text-xl--line-height: 1.35;
+}
+
+@theme inline {
+  --font-sans: var(--font-poppins);
+  --font-heading: var(--font-poppins);
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  --color-black: var(--c-black);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-hover-foreground: var(--primary-hover-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --radius-xs: 6px;
+  --radius-sm: 6px;
+  --radius-md: 6px;
+  --radius-lg: 10px;
+  --radius-xl: 10px;
+  --radius-2xl: 10px;
+  --radius-3xl: 10px;
+  --radius-4xl: 10px;
+}
+
+@utility page-width {
+  width: 100%;
+  max-width: calc(var(--content-max) + 2 * var(--page-margin));
+  margin-inline: auto;
+  padding-inline: var(--page-margin);
+}
+
+@utility page-grid {
+  display: grid;
+  grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+  column-gap: var(--col-gap);
+}
+
+@utility bleed-end {
+  margin-inline-end: calc(-1 * var(--bleed));
+}
+
+@utility bleed-x {
+  margin-inline: calc(-1 * var(--bleed));
+}
+
+@utility link {
+  text-decoration-line: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  transition: text-decoration-thickness 150ms var(--ease-out);
+  &:hover {
+    text-decoration-thickness: 2px;
+  }
+}
+
+@utility scroll-hairline {
+  border-bottom-color: var(--border);
+  @supports (animation-timeline: scroll()) {
+    border-bottom-color: transparent;
+    animation: scroll-hairline linear both;
+    animation-timeline: scroll(root);
+    animation-range: 0 64px;
+  }
+}
+
+@keyframes scroll-hairline {
+  to {
+    border-bottom-color: var(--border);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring;
+  }
+
+  html {
+    @apply font-sans;
+    background-color: var(--base-bg);
+    scroll-padding-top: var(--header-h);
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    @apply min-h-dvh text-base antialiased;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+
+  svg.lucide {
+    stroke-width: 1.5;
+  }
+
+  ::selection {
+    background-color: var(--foreground);
+    color: var(--background);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+}
+
+@view-transition {
+  navigation: auto;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 180ms;
+  animation-timing-function: cubic-bezier(0.2, 0, 0, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  @view-transition {
+    navigation: none;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
