@@ -5,7 +5,7 @@ import { Container, Grid } from "@/components/layout/Container";
 import { Section } from "@/components/layout/Section";
 import { Media } from "@/components/media/Media";
 import { Button } from "@/components/ui/button";
-import type { NavItem } from "@/data/site";
+import type { NavItem } from "@/data/types";
 import { cn } from "@/lib/utils";
 
 export type HeroVariant = "ridge" | "work";

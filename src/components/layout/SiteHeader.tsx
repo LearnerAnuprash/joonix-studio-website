@@ -4,7 +4,7 @@ import { Logo } from "@/components/brand/Logo";
 import { Container } from "@/components/layout/Container";
 import type { Tone } from "@/components/layout/Section";
 import { Button } from "@/components/ui/button";
-import type { NavItem } from "@/data/site";
+import type { NavItem } from "@/data/types";
 import { isCurrentPath } from "@/lib/navigation";
 import { cn } from "@/lib/utils";
 

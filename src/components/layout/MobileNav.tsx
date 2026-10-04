@@ -1,16 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef } from "react";
 import { ArrowRightIcon, MenuIcon, XIcon } from "lucide-react";
 
 import { Logo } from "@/components/brand/Logo";
 import { Button } from "@/components/ui/button";
-import {
-  Sheet,
-  SheetClose,
-  SheetContent,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
-import type { NavItem } from "@/data/site";
+import type { NavItem } from "@/data/types";
 import { isCurrentPath } from "@/lib/navigation";
 import { cn } from "@/lib/utils";
 
@@ -20,6 +13,7 @@ type MobileNavProps = {
   currentPath: string;
   siteName: string;
   positioning: string;
+  contactLinks?: NavItem[];
   className?: string;
 };
 
@@ -31,43 +25,53 @@ export function MobileNav({
   currentPath,
   siteName,
   positioning,
+  contactLinks = [],
   className,
 }: MobileNavProps) {
-  const [open, setOpen] = useState(false);
+  const dialogRef = useRef<HTMLDialogElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     const query = window.matchMedia(DESKTOP_QUERY);
-    const close = () => query.matches && setOpen(false);
+    const close = () => {
+      if (query.matches) dialogRef.current?.close();
+    };
     query.addEventListener("change", close);
     return () => query.removeEventListener("change", close);
   }, []);
 
+  const open = () => dialogRef.current?.showModal();
+  const close = () => dialogRef.current?.close();
+  const restoreFocus = () => triggerRef.current?.focus();
+
   return (
-    <Sheet open={open} onOpenChange={setOpen}>
-      <SheetTrigger asChild>
-        <Button variant="ghost" size="icon" className={className}>
-          <MenuIcon />
-          <span className="sr-only">Menu</span>
-        </Button>
-      </SheetTrigger>
-      <SheetContent
-        side="top"
-        data-tone="deep"
-        showCloseButton={false}
-        aria-describedby={undefined}
-        className="gap-0 border-none data-[side=top]:h-dvh"
+    <>
+      <Button
+        ref={triggerRef}
+        variant="ghost"
+        size="icon"
+        aria-haspopup="dialog"
+        onClick={open}
+        className={className}
       >
-        <SheetTitle className="sr-only">Menu</SheetTitle>
+        <MenuIcon />
+        <span className="sr-only">Menu</span>
+      </Button>
+      <dialog
+        ref={dialogRef}
+        aria-label="Menu"
+        data-tone="deep"
+        onClose={restoreFocus}
+        className="fixed inset-0 m-0 h-dvh max-h-none w-full max-w-none flex-col overflow-hidden p-0 opacity-0 transition-[opacity,display,overlay] transition-discrete duration-200 ease-out backdrop:bg-black/60 open:flex open:opacity-100 starting:open:opacity-0"
+      >
         <div className="page-width flex h-(--header-h) shrink-0 items-center justify-between">
           <a href="/" aria-label={`${siteName}, home`} className="rounded-md">
             <Logo />
           </a>
-          <SheetClose asChild>
-            <Button variant="ghost" size="icon">
-              <XIcon />
-              <span className="sr-only">Close menu</span>
-            </Button>
-          </SheetClose>
+          <Button variant="ghost" size="icon" autoFocus onClick={close}>
+            <XIcon />
+            <span className="sr-only">Close menu</span>
+          </Button>
         </div>
         <nav
           aria-label="Main"
@@ -103,10 +107,24 @@ export function MobileNav({
             >
               <a href={cta.href}>{cta.label}</a>
             </Button>
+            {contactLinks.length > 0 && (
+              <ul className="flex flex-wrap gap-x-6 gap-y-2 text-sm">
+                {contactLinks.map((item) => (
+                  <li key={item.href}>
+                    <a
+                      href={item.href}
+                      className="inline-flex min-h-11 items-center rounded-sm underline-offset-3 hover:underline"
+                    >
+                      {item.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            )}
             <p className="text-sm text-muted-foreground">{positioning}</p>
           </div>
         </nav>
-      </SheetContent>
-    </Sheet>
+      </dialog>
+    </>
   );
 }
