@@ -1,0 +1,68 @@
+---
+import { ArrowRightIcon } from "lucide-react";
+
+import { RidgeLine } from "@/components/brand/RidgeLine";
+import { Container, Grid } from "@/components/layout/Container";
+import { Section } from "@/components/layout/Section";
+import { Button } from "@/components/ui/button";
+import PageLayout from "@/layouts/PageLayout.astro";
+
+const links = [
+  { label: "Home", href: "/", body: "Start from the beginning." },
+  { label: "Work", href: "/work", body: "Case studies and results." },
+  { label: "Blog", href: "/blog", body: "Answers about websites and apps." },
+  {
+    label: "Start a project",
+    href: "/contact",
+    body: "Tell us what you need.",
+  },
+];
+---
+
+<PageLayout title="Page not found" noindex>
+  <Section
+    tone="deep"
+    spacing="none"
+    ambient="horizon"
+    reviewId="E-01"
+    className="under-header overflow-x-clip"
+  >
+    <Container>
+      <Grid className="gap-y-10">
+        <div class="col-span-full flex flex-col gap-8 lg:col-span-8">
+          <p class="text-caption font-medium text-muted-foreground">
+            Error 404
+          </p>
+          <h1 class="text-h1">This page does not exist.</h1>
+          <p class="max-w-xl text-lead text-muted-foreground">
+            The link may be old, or the address may have a typo. These pages are
+            a good place to pick up from.
+          </p>
+          <Button asChild className="self-start">
+            <a href="/">
+              Back to the home page
+              <ArrowRightIcon />
+            </a>
+          </Button>
+        </div>
+      </Grid>
+      <ul class="mt-16 grid border-t border-border sm:grid-cols-2 lg:mt-24 lg:grid-cols-4">
+        {links.map((link) => (
+          <li class="border-b border-border sm:odd:border-r lg:border-r lg:last:border-r-0">
+            <a
+              href={link.href}
+              class="group flex h-full flex-col gap-2 py-6 sm:px-6 sm:first:pl-0 lg:px-6 lg:first:pl-0"
+            >
+              <span class="flex items-center justify-between gap-4 text-h4">
+                {link.label}
+                <ArrowRightIcon className="size-5 transition-transform duration-150 ease-out group-hover:translate-x-1" />
+              </span>
+              <span class="text-sm text-muted-foreground">{link.body}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </Container>
+    <RidgeLine className="mt-16 lg:mt-24" />
+  </Section>
+</PageLayout>

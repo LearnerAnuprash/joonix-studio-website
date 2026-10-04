@@ -1,0 +1,42 @@
+---
+import type { GetStaticPaths } from "astro";
+
+import type { PostSummary } from "@/data/types";
+import { getPosts, getUsedTags } from "@/lib/content";
+import { pageCount, pageOf } from "@/lib/paginate";
+import BlogIndexLayout from "@/layouts/BlogIndexLayout.astro";
+
+export const getStaticPaths = (() => {
+  const rest = getPosts().slice(1);
+  const total = pageCount(rest.length);
+  return Array.from({ length: Math.max(0, total - 1) }, (_, index) => {
+    const page = index + 2;
+    return { params: { page: String(page) }, props: { page, rest } };
+  });
+}) satisfies GetStaticPaths;
+
+interface Props {
+  page: number;
+  rest: PostSummary[];
+}
+
+const { page, rest } = Astro.props;
+const result = pageOf(rest, page);
+---
+
+<BlogIndexLayout
+  title={`Blog, page ${page}`}
+  heading="Blog"
+  intro={`Page ${page} of ${result.total}. Straight answers to the questions clients ask us about websites, online shops and apps.`}
+  description={`Articles from Joonix Studio, page ${page} of ${result.total}.`}
+  breadcrumbs={[
+    { label: "Home", href: "/" },
+    { label: "Blog", href: "/blog" },
+    { label: `Page ${page}`, href: `/blog/page/${page}` },
+  ]}
+  posts={result.items}
+  tags={getUsedTags()}
+  current={page}
+  total={result.total}
+  basePath="/blog"
+/>

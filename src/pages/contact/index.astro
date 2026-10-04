@@ -1,0 +1,122 @@
+---
+import {
+  MailIcon,
+  MessageCircleIcon,
+  PhoneIcon,
+} from "lucide-react";
+
+import { ContactForm } from "@/components/forms/ContactForm";
+import { Container, Grid } from "@/components/layout/Container";
+import { Section } from "@/components/layout/Section";
+import { PageHero } from "@/components/sections/PageHero";
+import { Button } from "@/components/ui/button";
+import { emailHref, formatPhone, phoneHref } from "@/lib/contact";
+import { getSite } from "@/lib/content";
+import { whatsappLink } from "@/lib/site-links";
+import PageLayout from "@/layouts/PageLayout.astro";
+
+const site = getSite();
+const whatsapp = whatsappLink(site);
+const breadcrumbs = [
+  { label: "Home", href: "/" },
+  { label: "Start a project", href: "/contact" },
+];
+---
+
+<PageLayout
+  title="Start a project"
+  description="Tell Joonix Studio about your website or app. Free 30 minute discovery call, then a written scope and fixed quote."
+>
+  <PageHero
+    reviewId="C-01"
+    title="Start a project"
+    intro={`Tell us about your business and what you need. ${site.promises.reply} If it is a fit, we book a free 30 minute call.`}
+    breadcrumbs={breadcrumbs}
+  />
+
+  <Section spacing="none" className="pt-12 pb-(--section-pad) md:pt-16">
+    <Container>
+      <Grid className="gap-y-16">
+        <div data-review-id="C-02" class="col-span-full lg:col-span-7">
+          <h2 class="sr-only">Enquiry form</h2>
+          <ContactForm
+            client:idle
+            action="/api/contact"
+            email={site.email}
+            emailHref={emailHref(site.email)}
+            whatsappHref={whatsapp.href}
+            replyPromise={site.promises.reply}
+            privacyHref="/privacy"
+          />
+        </div>
+        <aside
+          data-review-id="C-03"
+          aria-labelledby="direct-title"
+          class="col-span-full flex flex-col gap-10 lg:col-span-4 lg:col-start-9"
+        >
+          <div class="flex flex-col gap-4">
+            <h2 id="direct-title" class="text-h4">
+              Prefer to talk directly?
+            </h2>
+            <p class="text-muted-foreground">
+              Message us on WhatsApp or email. Same people, same reply time.
+            </p>
+            <Button asChild variant="outline" className="self-start">
+              <a href={whatsapp.href} rel="noopener">
+                <MessageCircleIcon />
+                {whatsapp.label}
+              </a>
+            </Button>
+          </div>
+          <ul class="flex flex-col border-t border-border">
+            <li class="border-b border-border">
+              <a
+                href={emailHref(site.email)}
+                class="flex min-h-14 items-center gap-3 py-3 underline-offset-3 hover:underline"
+              >
+                <MailIcon aria-hidden="true" className="size-5 shrink-0" />
+                {site.email}
+              </a>
+            </li>
+            <li class="border-b border-border">
+              <a
+                href={phoneHref(site.phone)}
+                class="flex min-h-14 items-center gap-3 py-3 underline-offset-3 hover:underline"
+              >
+                <PhoneIcon aria-hidden="true" className="size-5 shrink-0" />
+                {formatPhone(site.phone)}
+              </a>
+            </li>
+          </ul>
+          <div class="flex flex-col gap-2">
+            <h3 class="text-caption font-medium text-muted-foreground">
+              Studio
+            </h3>
+            <address class="flex flex-col not-italic">
+              <span>{site.name}</span>
+              <span>{site.address.street}</span>
+              <span>{site.address.country}</span>
+            </address>
+          </div>
+          <div class="flex flex-col gap-2">
+            <h3 class="text-caption font-medium text-muted-foreground">
+              Hours
+            </h3>
+            <p>{site.hours.label}</p>
+            <p class="text-sm text-muted-foreground">Nepal Time is UTC+5:45.</p>
+          </div>
+          <a
+            href="/pricing"
+            class="group inline-flex items-center gap-2 text-sm font-medium underline-offset-3 hover:underline"
+          >
+            See plans and prices first
+            <ArrowRightIcon
+              aria-hidden="true"
+              className="size-4 transition-transform duration-150 group-hover:translate-x-1"
+            />
+          </a>
+        </aside>
+      </Grid>
+    </Container>
+  </Section>
+</PageLayout>

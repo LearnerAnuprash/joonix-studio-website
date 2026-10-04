@@ -1,0 +1,10 @@
+---
+import { getLegalPage } from "@/lib/content";
+import LegalLayout from "@/layouts/LegalLayout.astro";
+
+const { page, Content, headings } = getLegalPage("privacy");
+---
+
+<LegalLayout page={page} headings={headings}>
+  <Content />
+</LegalLayout>

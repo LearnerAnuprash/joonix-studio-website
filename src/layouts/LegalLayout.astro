@@ -1,0 +1,45 @@
+---
+import { Toc } from "@/components/content/Toc";
+import { Container, Grid } from "@/components/layout/Container";
+import { Section } from "@/components/layout/Section";
+import { PageHero } from "@/components/sections/PageHero";
+import type { Heading, LegalPage } from "@/data/types";
+import { formatDate, isoDay } from "@/lib/format";
+import PageLayout from "./PageLayout.astro";
+
+interface Props {
+  page: LegalPage;
+  headings: Heading[];
+}
+
+const { page, headings } = Astro.props;
+const breadcrumbs = [
+  { label: "Home", href: "/" },
+  { label: page.title, href: `/${page.slug}` },
+];
+---
+
+<PageLayout title={page.title} description={page.description}>
+  <PageHero reviewId="L-01" title={page.title} breadcrumbs={breadcrumbs}>
+    <p slot="meta" class="text-sm text-muted-foreground">
+      Last updated{" "}
+      <time datetime={isoDay(page.updatedDate)}>
+        {formatDate(page.updatedDate)}
+      </time>
+    </p>
+  </PageHero>
+  <Section spacing="none" className="pt-12 pb-(--section-pad) md:pt-16">
+    <Container>
+      <Grid className="gap-y-10">
+        <aside class="col-span-full lg:col-span-3 lg:col-start-10 lg:row-start-1">
+          <div class="lg:sticky lg:top-[calc(var(--header-h)+2rem)]">
+            <Toc client:idle headings={headings} />
+          </div>
+        </aside>
+        <article class="prose col-span-full min-w-0 lg:col-span-8 lg:row-start-1">
+          <slot />
+        </article>
+      </Grid>
+    </Container>
+  </Section>
+</PageLayout>

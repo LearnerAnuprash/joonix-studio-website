@@ -1,0 +1,41 @@
+---
+import { getSite } from "@/lib/content";
+import { emailHref } from "@/lib/contact";
+import { palette } from "@/styles/palette";
+
+const site = getSite();
+const css = `
+:root{color-scheme:dark;background:${palette.black};color:${palette.cream};font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+body{margin:0;min-height:100vh;display:grid;place-items:center;padding:24px;box-sizing:border-box}
+main{max-width:36rem}
+p{margin:0 0 16px;line-height:1.6;opacity:.75}
+.code{font-size:14px;font-weight:500}
+h1{margin:0 0 24px;font-size:clamp(2.25rem,6vw,3.5rem);line-height:1.08;letter-spacing:-.03em;font-weight:500}
+a{color:${palette.cream};text-underline-offset:3px}
+a:focus-visible{outline:2px solid ${palette.cream};outline-offset:2px;border-radius:2px}
+`;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>{`Something broke | ${site.name}`}</title>
+    <style is:inline set:html={css} />
+  </head>
+  <body>
+    <main>
+      <p class="code">Error 500</p>
+      <h1>Something broke on our side.</h1>
+      <p>
+        Try again in a minute. If it keeps happening, email us and we will look
+        at it.
+      </p>
+      <p>
+        <a href={emailHref(site.email)}>{site.email}</a>
+      </p>
+    </main>
+  </body>
+</html>

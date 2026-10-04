@@ -1,0 +1,46 @@
+---
+import type { GetStaticPaths } from "astro";
+
+import type { Tag } from "@/data/types";
+import { getPostsByTag, getUsedTags } from "@/lib/content";
+import { pageCount, pageOf } from "@/lib/paginate";
+import BlogIndexLayout from "@/layouts/BlogIndexLayout.astro";
+
+export const getStaticPaths = (() =>
+  getUsedTags().flatMap((tag) => {
+    const total = pageCount(getPostsByTag(tag.slug).length);
+    return Array.from({ length: Math.max(0, total - 1) }, (_, index) => ({
+      params: { tag: tag.slug, page: String(index + 2) },
+      props: { tag, page: index + 2 },
+    }));
+  })) satisfies GetStaticPaths;
+
+interface Props {
+  tag: Tag;
+  page: number;
+}
+
+const { tag, page } = Astro.props;
+const result = pageOf(getPostsByTag(tag.slug), page);
+const basePath = `/blog/tag/${tag.slug}`;
+---
+
+<BlogIndexLayout
+  title={`${tag.label} articles, page ${page}`}
+  heading={tag.label}
+  intro={`Page ${page} of ${result.total}. ${tag.description}`}
+  description={tag.description}
+  breadcrumbs={[
+    { label: "Home", href: "/" },
+    { label: "Blog", href: "/blog" },
+    { label: tag.label, href: basePath },
+    { label: `Page ${page}`, href: `${basePath}/page/${page}` },
+  ]}
+  posts={result.items}
+  tags={getUsedTags()}
+  currentTag={tag.slug}
+  current={page}
+  total={result.total}
+  basePath={basePath}
+  noindex
+/>

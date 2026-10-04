@@ -1,0 +1,25 @@
+---
+import { getPosts, getUsedTags } from "@/lib/content";
+import { pageOf } from "@/lib/paginate";
+import BlogIndexLayout from "@/layouts/BlogIndexLayout.astro";
+
+const [featured, ...rest] = getPosts();
+const page = pageOf(rest, 1);
+---
+
+<BlogIndexLayout
+  title="Blog"
+  heading="Blog"
+  intro="Straight answers to the questions clients ask us about websites, online shops and apps in Nepal."
+  description="Answer-first articles from Joonix Studio on website costs, online shops, payments and app development in Nepal."
+  breadcrumbs={[
+    { label: "Home", href: "/" },
+    { label: "Blog", href: "/blog" },
+  ]}
+  posts={page.items}
+  tags={getUsedTags()}
+  current={1}
+  total={page.total}
+  basePath="/blog"
+  featured={featured}
+/>

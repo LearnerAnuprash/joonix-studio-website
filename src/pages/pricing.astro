@@ -1,0 +1,124 @@
+---
+import { ArrowRightIcon } from "lucide-react";
+
+import { Container, Grid } from "@/components/layout/Container";
+import { Divider } from "@/components/layout/Divider";
+import { Section } from "@/components/layout/Section";
+import { CheckList } from "@/components/sections/CheckList";
+import { CtaBand } from "@/components/sections/CtaBand";
+import { FaqList } from "@/components/sections/FaqList";
+import { PageHero } from "@/components/sections/PageHero";
+import { PricingCard } from "@/components/sections/PricingCard";
+import { Button } from "@/components/ui/button";
+import { formatMoney } from "@/lib/format";
+import { getPricing, getSite } from "@/lib/content";
+import { whatsappLink } from "@/lib/site-links";
+import PageLayout from "@/layouts/PageLayout.astro";
+
+const site = getSite();
+const pricing = getPricing();
+const breadcrumbs = [
+  { label: "Home", href: "/" },
+  { label: "Pricing", href: "/pricing" },
+];
+---
+
+<PageLayout
+  title="Pricing"
+  description="Website and app prices from Joonix Studio in Nepalese rupees. Launch from Rs. 15,000, Scale from Rs. 60,000, Custom from Rs. 1,50,000, apps from Rs. 1,00,000."
+>
+  <PageHero
+    reviewId="P-01"
+    title={pricing.title}
+    intro={pricing.intro}
+    breadcrumbs={breadcrumbs}
+  />
+
+  <Section reviewId="P-02" aria-label="Website plans">
+    <Container className="flex flex-col gap-6">
+      <div class="grid gap-6 lg:grid-cols-3">
+        {pricing.plans.map((plan) => (
+          <PricingCard plan={plan} className="reveal" />
+        ))}
+      </div>
+      <article
+        data-review-id="P-03"
+        aria-labelledby="plan-apps"
+        class="reveal grid gap-6 rounded-lg border border-border p-6 md:p-8 lg:grid-cols-12 lg:items-center lg:gap-(--col-gap)"
+      >
+        <div class="flex flex-col gap-2 lg:col-span-4">
+          <h2 id="plan-apps" class="text-h3">
+            {pricing.appDev.title}
+          </h2>
+          <p class="text-sm text-muted-foreground tabular">
+            From{" "}
+            <span class="text-h4 text-foreground">
+              {formatMoney(pricing.appDev.from)}
+            </span>
+          </p>
+        </div>
+        <p class="text-muted-foreground lg:col-span-5">{pricing.appDev.note}</p>
+        <div class="lg:col-span-3 lg:justify-self-end">
+          <Button asChild variant="outline">
+            <a href="/contact?plan=apps">
+              Talk about an app
+              <ArrowRightIcon />
+            </a>
+          </Button>
+        </div>
+      </article>
+    </Container>
+  </Section>
+
+  <Divider />
+
+  <Section reviewId="P-04" aria-labelledby="included-title">
+    <Container>
+      <Grid className="gap-y-10">
+        <div class="col-span-full flex flex-col gap-6 lg:col-span-5">
+          <h2 id="included-title" class="text-h2">
+            Every plan includes
+          </h2>
+          <p class="text-lead text-muted-foreground">
+            The plan sets the size of the job. These come with every project,
+            whatever it costs.
+          </p>
+        </div>
+        <CheckList
+          items={pricing.included}
+          columns={1}
+          className="col-span-full lg:col-span-6 lg:col-start-7"
+        />
+      </Grid>
+    </Container>
+  </Section>
+
+  <Section
+    tone="deep"
+    ambient="corner"
+    reviewId="P-05"
+    aria-labelledby="faq-title"
+  >
+    <Container>
+      <Grid className="gap-y-10">
+        <h2 id="faq-title" class="col-span-full text-h2 lg:col-span-4">
+          Pricing questions
+        </h2>
+        <FaqList
+          faqs={pricing.faqs}
+          className="col-span-full lg:col-span-7 lg:col-start-6"
+        />
+      </Grid>
+    </Container>
+  </Section>
+
+  <CtaBand
+    reviewId="P-06"
+    tone="base"
+    title="Get a fixed quote for your project."
+    body="Tell us what you need. After a free 30 minute call you get a written scope and a fixed price within three working days."
+    action={site.cta}
+    whatsapp={whatsappLink(site)}
+    promise={site.promises.reply}
+  />
+</PageLayout>

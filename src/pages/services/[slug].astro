@@ -1,0 +1,226 @@
+---
+import type { GetStaticPaths } from "astro";
+import { ArrowRightIcon } from "lucide-react";
+
+import { Container, Grid } from "@/components/layout/Container";
+import { Divider } from "@/components/layout/Divider";
+import { Section } from "@/components/layout/Section";
+import { PostList } from "@/components/content/PostList";
+import { CaseStudyCard } from "@/components/sections/CaseStudyCard";
+import { CheckList } from "@/components/sections/CheckList";
+import { CtaBand } from "@/components/sections/CtaBand";
+import { FaqList } from "@/components/sections/FaqList";
+import { PageHero } from "@/components/sections/PageHero";
+import { PointGrid } from "@/components/sections/PointGrid";
+import { ProcessSteps } from "@/components/sections/ProcessSteps";
+import { SectionHeader } from "@/components/sections/SectionHeader";
+import { TechList } from "@/components/sections/TechList";
+import { Button } from "@/components/ui/button";
+import type { Service } from "@/data/types";
+import { formatMoney } from "@/lib/format";
+import {
+  getPostsByService,
+  getProcess,
+  getServices,
+  getSite,
+  getWorkByService,
+  serviceLabel,
+} from "@/lib/content";
+import { whatsappLink } from "@/lib/site-links";
+import PageLayout from "@/layouts/PageLayout.astro";
+
+export const getStaticPaths = (() =>
+  getServices().map((service) => ({
+    params: { slug: service.slug },
+    props: { service },
+  }))) satisfies GetStaticPaths;
+
+interface Props {
+  service: Service;
+}
+
+const { service } = Astro.props;
+const site = getSite();
+const work = getWorkByService(service.slug);
+const posts = getPostsByService(service.slug).slice(0, 3);
+const plan = service.slug === "application-development" ? "apps" : "unsure";
+const breadcrumbs = [
+  { label: "Home", href: "/" },
+  { label: "Services", href: "/services" },
+  { label: service.title, href: `/services/${service.slug}` },
+];
+---
+
+<PageLayout title={service.title} description={service.answer}>
+  <PageHero
+    reviewId="SD-01"
+    title={service.title}
+    intro={service.answer}
+    breadcrumbs={breadcrumbs}
+  >
+    <div
+      slot="aside"
+      class="flex flex-col items-start gap-5 border-t border-input pt-6"
+    >
+      <p class="text-sm text-muted-foreground tabular">
+        From{" "}
+        <span class="text-h3 text-foreground">
+          {formatMoney(service.priceFrom)}
+        </span>
+      </p>
+      <Button asChild>
+        <a href={`/contact?plan=${plan}`}>
+          {site.cta.label}
+          <ArrowRightIcon />
+        </a>
+      </Button>
+    </div>
+  </PageHero>
+
+  <Section reviewId="SD-02" aria-labelledby="audience-title">
+    <Container className="flex flex-col gap-16">
+      <SectionHeader id="audience-title" title="Who it is for" />
+      <PointGrid items={service.audience} />
+    </Container>
+  </Section>
+
+  <Divider />
+
+  <Section reviewId="SD-03" aria-labelledby="scope-title">
+    <Container className="flex flex-col gap-16">
+      <SectionHeader
+        id="scope-title"
+        title="What is included"
+        intro="Everything below is part of the written scope. Nothing is added later without your say."
+      />
+      <PointGrid items={service.scope} />
+    </Container>
+  </Section>
+
+  <Section
+    tone="inverse"
+    ambient="soft"
+    reviewId="SD-04"
+    aria-labelledby="process-title"
+  >
+    <Container className="flex flex-col gap-16">
+      <SectionHeader id="process-title" title="How the project runs" />
+      <ProcessSteps steps={getProcess()} />
+    </Container>
+  </Section>
+
+  <Section reviewId="SD-05" aria-labelledby="deliverables-title">
+    <Container>
+      <Grid className="gap-y-10">
+        <h2 id="deliverables-title" class="col-span-full text-h2 lg:col-span-5">
+          What you get
+        </h2>
+        <CheckList
+          items={service.deliverables}
+          columns={1}
+          className="col-span-full lg:col-span-6 lg:col-start-7"
+        />
+      </Grid>
+    </Container>
+  </Section>
+
+  <Divider />
+
+  <Section reviewId="SD-06" aria-labelledby="tech-title">
+    <Container className="flex flex-col gap-12">
+      <SectionHeader
+        id="tech-title"
+        title="Tools we use"
+        intro="We pick tools that are well supported, fast for your customers and easy to hand over to another team."
+      />
+      <TechList groups={service.tech} />
+    </Container>
+  </Section>
+
+  <Section
+    tone="deep"
+    ambient="corner"
+    reviewId="SD-07"
+    aria-labelledby="price-title"
+  >
+    <Container>
+      <Grid className="reveal gap-y-8 lg:items-end">
+        <div class="col-span-full flex flex-col gap-4 lg:col-span-7">
+          <h2 id="price-title" class="text-h2">
+            {service.title} from {formatMoney(service.priceFrom)}
+          </h2>
+          <p class="text-lead text-muted-foreground">{service.priceNote}</p>
+        </div>
+        <div class="col-span-full lg:col-span-4 lg:col-start-9 lg:justify-self-end">
+          <Button asChild variant="outline" size="lg">
+            <a href="/pricing">
+              See plans and prices
+              <ArrowRightIcon />
+            </a>
+          </Button>
+        </div>
+      </Grid>
+    </Container>
+  </Section>
+
+  {work.length > 0 && (
+    <Section reviewId="SD-08" aria-labelledby="work-title">
+      <Container className="flex flex-col gap-16">
+        <SectionHeader
+          id="work-title"
+          title="Related work"
+          link={{ label: "All case studies", href: "/work" }}
+        />
+        {work.slice(0, 2).map((item, index) => (
+          <CaseStudyCard
+            work={item}
+            serviceLabels={item.services.map(serviceLabel)}
+            layout={index % 2 === 0 ? "media-start" : "media-end"}
+          />
+        ))}
+      </Container>
+    </Section>
+  )}
+
+  {work.length > 0 && <Divider />}
+
+  <Section reviewId="SD-09" aria-labelledby="faq-title">
+    <Container>
+      <Grid className="gap-y-10">
+        <h2 id="faq-title" class="col-span-full text-h2 lg:col-span-4">
+          Questions clients ask
+        </h2>
+        <FaqList
+          faqs={service.faqs}
+          className="col-span-full lg:col-span-7 lg:col-start-6"
+        />
+      </Grid>
+    </Container>
+  </Section>
+
+  {posts.length > 0 && (
+    <>
+      <Divider />
+      <Section reviewId="SD-10" aria-labelledby="posts-title">
+        <Container className="flex flex-col gap-12">
+          <SectionHeader
+            id="posts-title"
+            title="Related articles"
+            link={{ label: "All articles", href: "/blog" }}
+          />
+          <PostList posts={posts} />
+        </Container>
+      </Section>
+    </>
+  )}
+
+  <CtaBand
+    reviewId="SD-11"
+    tone="base"
+    title={`Talk to us about ${service.title.toLowerCase()}.`}
+    body="A free 30 minute call. You get straight advice and, if it is a fit, a written scope with a fixed price."
+    action={{ label: site.cta.label, href: `/contact?plan=${plan}` }}
+    whatsapp={whatsappLink(site)}
+    promise={site.promises.reply}
+  />
+</PageLayout>
