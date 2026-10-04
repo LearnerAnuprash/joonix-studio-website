@@ -1,0 +1,176 @@
+---
+import type { GetStaticPaths } from "astro";
+
+import { DraftNotice } from "@/components/common/DraftNotice";
+import { AnswerBox } from "@/components/content/AnswerBox";
+import { AuthorBox } from "@/components/content/AuthorBox";
+import { KeyTakeaways } from "@/components/content/KeyTakeaways";
+import { PostList } from "@/components/content/PostList";
+import { PostMeta } from "@/components/content/PostMeta";
+import { ShareLinks } from "@/components/content/ShareLinks";
+import { Toc } from "@/components/content/Toc";
+import { Container, Grid } from "@/components/layout/Container";
+import { Section } from "@/components/layout/Section";
+import { Media } from "@/components/media/Media";
+import { FaqList } from "@/components/sections/FaqList";
+import { LinkCard } from "@/components/sections/LinkCard";
+import { PageHero } from "@/components/sections/PageHero";
+import { SectionHeader } from "@/components/sections/SectionHeader";
+import { formatMoney } from "@/lib/format";
+import {
+  getPostEntries,
+  getRelatedPosts,
+  getService,
+  isPublished,
+} from "@/lib/content";
+import PageLayout from "@/layouts/PageLayout.astro";
+
+export const getStaticPaths = (() =>
+  getPostEntries().map((entry) => ({
+    params: { slug: entry.post.slug },
+    props: { entry },
+  }))) satisfies GetStaticPaths;
+
+type Entry = ReturnType<typeof getPostEntries>[number];
+
+interface Props {
+  entry: Entry;
+}
+
+const { entry } = Astro.props;
+const { post, Content } = entry;
+const url = new URL(`/blog/${post.slug}`, Astro.site).href;
+const related = getRelatedPosts(post);
+const services = post.services
+  .map((slug) => getService(slug))
+  .filter((service) => service !== undefined);
+const headings = [
+  ...post.headings,
+  ...(post.faqs.length > 0
+    ? [{ depth: 2, slug: "questions", text: "Questions people ask" }]
+    : []),
+];
+const breadcrumbs = [
+  { label: "Home", href: "/" },
+  { label: "Blog", href: "/blog" },
+  { label: post.title, href: `/blog/${post.slug}` },
+];
+const draftLabel = post.draft
+  ? "Draft, visible in preview only"
+  : !isPublished(post)
+    ? "Scheduled, visible in preview only"
+    : undefined;
+---
+
+<PageLayout title={post.title} description={post.description}>
+  <PageHero reviewId="BP-02" title={post.title} breadcrumbs={breadcrumbs} wide>
+    <div slot="meta" class="flex flex-col gap-6">
+      {draftLabel && <DraftNotice label={draftLabel} />}
+      <PostMeta
+        author={post.author}
+        publishDate={post.publishDate}
+        updatedDate={post.updatedDate}
+        readingTime={post.readingTime}
+      />
+    </div>
+  </PageHero>
+
+  <Section spacing="none" className="pt-12 pb-(--section-pad) md:pt-16">
+    <Container>
+      <Grid className="gap-y-10">
+        <aside
+          data-review-id="BP-06"
+          class="col-span-full lg:col-span-3 lg:col-start-10 lg:row-start-1"
+        >
+          <div class="lg:sticky lg:top-[calc(var(--header-h)+2rem)]">
+            <Toc client:intent headings={headings} />
+          </div>
+        </aside>
+        <article
+          data-pagefind-body
+          class="col-span-full flex min-w-0 flex-col gap-12 lg:col-span-8 lg:row-start-1"
+        >
+          <div data-review-id="BP-03">
+            <AnswerBox answer={post.answer} />
+          </div>
+          <div data-review-id="BP-04">
+            <KeyTakeaways items={post.takeaways} />
+          </div>
+          {post.cover && (
+            <figure data-review-id="BP-05" class="flex flex-col gap-3">
+              <Media
+                ratio={post.cover.ratio}
+                image={post.cover.image}
+                priority
+              />
+              <figcaption class="text-caption text-muted-foreground">
+                {post.cover.caption}
+              </figcaption>
+            </figure>
+          )}
+          <div data-review-id="BP-07" class="prose">
+            <Content />
+          </div>
+          {post.faqs.length > 0 && (
+            <section
+              data-review-id="BP-08"
+              aria-labelledby="questions"
+              class="flex flex-col gap-6"
+            >
+              <h2 id="questions" class="text-h3">
+                Questions people ask
+              </h2>
+              <FaqList faqs={post.faqs} />
+            </section>
+          )}
+          <div data-review-id="BP-09">
+            <AuthorBox author={post.author} />
+          </div>
+          <div data-review-id="BP-10">
+            <ShareLinks client:visible url={url} title={post.title} />
+          </div>
+        </article>
+      </Grid>
+    </Container>
+  </Section>
+
+  {services.length > 0 && (
+    <Section
+      tone="deep"
+      ambient="corner"
+      reviewId="BP-11"
+      aria-labelledby="service-title"
+    >
+      <Container className="flex flex-col gap-12">
+        <SectionHeader
+          id="service-title"
+          title="Need help with this?"
+          intro="This article comes from the work we do every week. Here is the service behind it."
+        />
+        <div class="grid gap-6 md:grid-cols-2">
+          {services.map((service) => (
+            <LinkCard
+              href={`/services/${service.slug}`}
+              title={service.title}
+              description={service.summary}
+              meta={`From ${formatMoney(service.priceFrom)}`}
+            />
+          ))}
+        </div>
+      </Container>
+    </Section>
+  )}
+
+  {related.length > 0 && (
+    <Section reviewId="BP-12" aria-labelledby="related-title">
+      <Container className="flex flex-col gap-12">
+        <SectionHeader
+          id="related-title"
+          title="Keep reading"
+          link={{ label: "All articles", href: "/blog" }}
+        />
+        <PostList posts={related} />
+      </Container>
+    </Section>
+  )}
+</PageLayout>

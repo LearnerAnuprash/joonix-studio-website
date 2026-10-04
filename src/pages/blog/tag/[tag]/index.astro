@@ -1,0 +1,40 @@
+---
+import type { GetStaticPaths } from "astro";
+
+import type { Tag } from "@/data/types";
+import { getPostsByTag, getUsedTags } from "@/lib/content";
+import { pageOf } from "@/lib/paginate";
+import BlogIndexLayout from "@/layouts/BlogIndexLayout.astro";
+
+export const getStaticPaths = (() =>
+  getUsedTags().map((tag) => ({
+    params: { tag: tag.slug },
+    props: { tag },
+  }))) satisfies GetStaticPaths;
+
+interface Props {
+  tag: Tag;
+}
+
+const { tag } = Astro.props;
+const result = pageOf(getPostsByTag(tag.slug), 1);
+const basePath = `/blog/tag/${tag.slug}`;
+---
+
+<BlogIndexLayout
+  title={`${tag.label} articles`}
+  heading={tag.label}
+  intro={tag.description}
+  description={tag.description}
+  breadcrumbs={[
+    { label: "Home", href: "/" },
+    { label: "Blog", href: "/blog" },
+    { label: tag.label, href: basePath },
+  ]}
+  posts={result.items}
+  tags={getUsedTags()}
+  currentTag={tag.slug}
+  current={1}
+  total={result.total}
+  basePath={basePath}
+/>

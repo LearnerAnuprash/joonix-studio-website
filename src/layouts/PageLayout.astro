@@ -1,9 +1,11 @@
 ---
+import { Footer } from "@/components/layout/Footer";
 import { MobileNav } from "@/components/layout/MobileNav";
 import type { Tone } from "@/components/layout/Section";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
-import { site } from "@/data/site";
+import { getSite } from "@/lib/content";
+import { contactLinks, footerColumns, footerContact } from "@/lib/site-links";
 import BaseLayout from "./BaseLayout.astro";
 
 interface Props {
@@ -13,8 +15,10 @@ interface Props {
   headerTone?: Tone;
 }
 
-const { headerTone = "base", ...rest } = Astro.props;
+const { headerTone = "deep", ...rest } = Astro.props;
+const site = getSite();
 const currentPath = Astro.url.pathname;
+const year = new Date().getFullYear();
 ---
 
 <BaseLayout {...rest}>
@@ -25,20 +29,30 @@ const currentPath = Astro.url.pathname;
     currentPath={currentPath}
     siteName={site.name}
   >
-    <ThemeToggle slot="themeToggle" client:idle />
+    <ThemeToggle slot="themeToggle" client:intent />
     <MobileNav
       slot="mobileNav"
-      client:media="(max-width: 63.99rem)"
+      client:intent
       nav={site.nav}
       cta={site.cta}
       currentPath={currentPath}
       siteName={site.name}
       positioning={site.positioning}
+      contactLinks={contactLinks(site)}
       className="lg:hidden"
     />
   </SiteHeader>
   <main id="main">
     <slot />
   </main>
-  <slot name="footer" />
+  <Footer
+    siteName={site.name}
+    positioning={site.positioning}
+    cta={site.cta}
+    contact={footerContact(site)}
+    columns={footerColumns(site)}
+    legal={site.legal}
+    socials={site.socials}
+    year={year}
+  />
 </BaseLayout>

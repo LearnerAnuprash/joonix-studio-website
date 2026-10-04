@@ -10,6 +10,7 @@ export default defineConfig({
   use: {
     baseURL: `http://localhost:${port}`,
     channel: process.env.PLAYWRIGHT_CHANNEL ?? "chrome",
+    contextOptions: { reducedMotion: "reduce" },
   },
   projects: [
     {

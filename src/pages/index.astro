@@ -1,14 +1,161 @@
 ---
+import { Container } from "@/components/layout/Container";
+import { Divider } from "@/components/layout/Divider";
+import { Section } from "@/components/layout/Section";
+import { PostList } from "@/components/content/PostList";
+import { CaseStudyCard } from "@/components/sections/CaseStudyCard";
+import { CtaBand } from "@/components/sections/CtaBand";
 import { Hero } from "@/components/sections/Hero";
-import { hero } from "@/data/home";
+import { PriceList } from "@/components/sections/PriceList";
+import { ProcessSteps } from "@/components/sections/ProcessSteps";
+import { SectionHeader } from "@/components/sections/SectionHeader";
+import { ServicesSplit } from "@/components/sections/ServicesSplit";
+import { StatList } from "@/components/sections/StatList";
+import {
+  getCommitments,
+  getFeaturedWork,
+  getHome,
+  getPosts,
+  getPricing,
+  getProcess,
+  getServices,
+  getSite,
+  serviceLabel,
+} from "@/lib/content";
+import { whatsappLink } from "@/lib/site-links";
 import PageLayout from "@/layouts/PageLayout.astro";
+
+const site = getSite();
+const home = getHome();
+const pricing = getPricing();
+const work = getFeaturedWork().slice(0, 3);
+const posts = getPosts().slice(0, 3);
+
+const priceRows = [
+  ...pricing.plans.map((plan) => ({
+    name: plan.name,
+    audience: plan.audience,
+    from: plan.setupMin,
+    href: `/pricing#plan-${plan.id}`,
+  })),
+  {
+    name: "Apps",
+    audience: "Web and mobile apps, scoped after a free call.",
+    from: pricing.appDev.from,
+    href: "/services/application-development",
+  },
+];
 ---
 
-<PageLayout headerTone="deep">
+<PageLayout>
   <Hero
-    headline={hero.headlines[0] ?? ""}
-    intro={hero.intro}
-    action={hero.action}
-    note={hero.note}
+    headline={home.hero.headlines[0] ?? ""}
+    intro={home.hero.intro}
+    action={home.hero.action}
+    note={home.hero.note}
+  />
+
+  {work.length > 0 && (
+    <Section reviewId="H-02" aria-labelledby="work-title">
+      <Container className="flex flex-col gap-16 md:gap-24">
+        <SectionHeader
+          id="work-title"
+          title={home.work.title}
+          intro={home.work.intro}
+          link={home.work.link}
+        />
+        {work.map((item, index) => (
+          <CaseStudyCard
+            work={item}
+            serviceLabels={item.services.map(serviceLabel)}
+            layout={index % 2 === 0 ? "media-start" : "media-end"}
+          />
+        ))}
+      </Container>
+    </Section>
+  )}
+
+  {work.length > 0 && <Divider />}
+
+  <Section reviewId="H-03" aria-labelledby="services-title">
+    <Container className="flex flex-col gap-16">
+      <SectionHeader
+        id="services-title"
+        title={home.services.title}
+        intro={home.services.intro}
+      />
+      <ServicesSplit services={getServices()} />
+    </Container>
+  </Section>
+
+  <Section
+    tone="inverse"
+    ambient="soft"
+    reviewId="H-04"
+    aria-labelledby="process-title"
+  >
+    <Container className="flex flex-col gap-16">
+      <SectionHeader
+        id="process-title"
+        title={home.process.title}
+        intro={home.process.intro}
+      />
+      <ProcessSteps steps={getProcess()} />
+    </Container>
+  </Section>
+
+  <Section
+    tone="deep"
+    ambient="corner"
+    reviewId="H-05"
+    aria-labelledby="proof-title"
+  >
+    <Container className="flex flex-col gap-16">
+      <SectionHeader
+        id="proof-title"
+        title={home.proof.title}
+        intro={home.proof.intro}
+      />
+      <StatList stats={getCommitments()} />
+    </Container>
+  </Section>
+
+  <Section reviewId="H-06" aria-labelledby="pricing-title">
+    <Container className="flex flex-col gap-16">
+      <SectionHeader
+        id="pricing-title"
+        title={home.pricing.title}
+        intro={home.pricing.intro}
+        link={home.pricing.link}
+      />
+      <PriceList rows={priceRows} />
+    </Container>
+  </Section>
+
+  {posts.length > 0 && (
+    <>
+      <Divider />
+      <Section reviewId="H-07" aria-labelledby="posts-title">
+        <Container className="flex flex-col gap-16">
+          <SectionHeader
+            id="posts-title"
+            title={home.posts.title}
+            intro={home.posts.intro}
+            link={home.posts.link}
+          />
+          <PostList posts={posts} />
+        </Container>
+      </Section>
+    </>
+  )}
+
+  <CtaBand
+    reviewId="H-08"
+    tone="base"
+    title={home.cta.title}
+    body={home.cta.body}
+    action={site.cta}
+    whatsapp={whatsappLink(site)}
+    promise={site.promises.reply}
   />
 </PageLayout>

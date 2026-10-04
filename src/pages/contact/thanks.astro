@@ -1,0 +1,53 @@
+---
+import { ArrowRightIcon, MessageCircleIcon } from "lucide-react";
+
+import { Container } from "@/components/layout/Container";
+import { Section } from "@/components/layout/Section";
+import { PostList } from "@/components/content/PostList";
+import { PageHero } from "@/components/sections/PageHero";
+import { Button } from "@/components/ui/button";
+import { getPosts, getSite } from "@/lib/content";
+import { whatsappLink } from "@/lib/site-links";
+import PageLayout from "@/layouts/PageLayout.astro";
+
+const site = getSite();
+const whatsapp = whatsappLink(site);
+const posts = getPosts().slice(0, 3);
+---
+
+<PageLayout
+  title="Thanks, your enquiry is with us"
+  description="Your enquiry reached Joonix Studio."
+  noindex
+>
+  <PageHero
+    title="Thanks. Your enquiry is with us."
+    intro={`${site.promises.reply} If it is urgent, message us on WhatsApp.`}
+  >
+    <div class="mt-10 flex flex-wrap gap-3">
+      <Button asChild variant="outline">
+        <a href={whatsapp.href} rel="noopener">
+          <MessageCircleIcon />
+          {whatsapp.label}
+        </a>
+      </Button>
+      <Button asChild variant="ghost">
+        <a href="/">
+          Back to the home page
+          <ArrowRightIcon />
+        </a>
+      </Button>
+    </div>
+  </PageHero>
+
+  {posts.length > 0 && (
+    <Section aria-labelledby="reading-title">
+      <Container className="flex flex-col gap-12">
+        <h2 id="reading-title" class="text-h2">
+          While you wait
+        </h2>
+        <PostList posts={posts} />
+      </Container>
+    </Section>
+  )}
+</PageLayout>

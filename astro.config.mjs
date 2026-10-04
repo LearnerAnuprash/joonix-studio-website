@@ -4,6 +4,7 @@ import react from "@astrojs/react";
 import tailwindcss from "@tailwindcss/vite";
 import { cn as cnTables } from "cn/vite";
 import devGrid from "./integrations/dev-grid/index.ts";
+import intentDirective from "./integrations/intent/index.ts";
 
 export default defineConfig({
   site: process.env.PUBLIC_SITE_URL ?? "http://localhost:4321",
@@ -13,15 +14,20 @@ export default defineConfig({
 
   fonts: [
     {
-      provider: fontProviders.npm(),
+      provider: fontProviders.local(),
       name: "Poppins",
       cssVariable: "--font-poppins",
-      weights: [400, 500, 600],
-      styles: ["normal"],
-      subsets: ["latin", "latin-ext"],
-      display: "swap",
       fallbacks: ["ui-sans-serif", "system-ui", "sans-serif"],
-      options: { package: "@fontsource/poppins" },
+      options: {
+        variants: [400, 500].map((weight) => ({
+          weight,
+          style: "normal",
+          display: "swap",
+          src: [
+            `@fontsource/poppins/files/poppins-latin-${weight}-normal.woff2`,
+          ],
+        })),
+      },
     },
   ],
 
@@ -45,7 +51,7 @@ export default defineConfig({
     },
   },
 
-  integrations: [react(), devGrid()],
+  integrations: [react(), intentDirective(), devGrid()],
 
   vite: {
     plugins: [

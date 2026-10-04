@@ -7,7 +7,7 @@ type HeroPreviewProps = Omit<HeroProps, "headline"> & {
   headlines: string[];
 };
 
-const weights = [400, 500, 600] as const;
+const weights = [400, 500] as const;
 
 type Weight = (typeof weights)[number];
 

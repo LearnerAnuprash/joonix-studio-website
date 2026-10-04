@@ -1,0 +1,75 @@
+---
+import {
+  ContactForm,
+  type ContactFormStatus,
+} from "@/components/forms/ContactForm";
+import { LabSection } from "@/components/lab/LabSection";
+import { Grid } from "@/components/layout/Container";
+import { emailHref } from "@/lib/contact";
+import { getSite } from "@/lib/content";
+import type { EnquiryValues } from "@/lib/enquiry";
+import { whatsappLink } from "@/lib/site-links";
+import PageLayout from "@/layouts/PageLayout.astro";
+
+const site = getSite();
+
+const filled: Partial<EnquiryValues> = {
+  name: "Sita Sharma",
+  email: "sita@example.com",
+  phone: "+977 980-0000000",
+  plan: "scale",
+  budget: "50k-150k",
+  message:
+    "We sell handmade pashmina through Instagram and want our own shop with eSewa and Khalti.",
+};
+
+const states: {
+  id: string;
+  title: string;
+  status: ContactFormStatus;
+  values?: Partial<EnquiryValues>;
+  showErrors?: boolean;
+}[] = [
+  { id: "empty", title: "Empty", status: "idle" },
+  {
+    id: "errors",
+    title: "Field errors",
+    status: "idle",
+    values: { name: "S", email: "sita@", phone: "abc", message: "Shop" },
+    showErrors: true,
+  },
+  {
+    id: "submitting",
+    title: "Submitting",
+    status: "submitting",
+    values: filled,
+  },
+  { id: "success", title: "Success", status: "success", values: filled },
+  { id: "server", title: "Server failure", status: "error", values: filled },
+  { id: "offline", title: "Offline", status: "offline", values: filled },
+];
+---
+
+<PageLayout title="Contact form states" noindex>
+  {states.map((state) => (
+    <LabSection id={state.id} title={state.title}>
+      <Grid>
+        <div class="col-span-full lg:col-span-7">
+          <ContactForm
+            action="/api/contact"
+            email={site.email}
+            emailHref={emailHref(site.email)}
+            whatsappHref={whatsappLink(site).href}
+            replyPromise={site.promises.reply}
+            privacyHref="/privacy"
+            preview={{
+              status: state.status,
+              values: state.values,
+              showErrors: state.showErrors,
+            }}
+          />
+        </div>
+      </Grid>
+    </LabSection>
+  ))}
+</PageLayout>

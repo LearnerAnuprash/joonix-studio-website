@@ -1,0 +1,63 @@
+---
+import type { GetStaticPaths } from "astro";
+
+import { TextLink } from "@/components/common/TextLink";
+import { PostList } from "@/components/content/PostList";
+import { Container } from "@/components/layout/Container";
+import { Section } from "@/components/layout/Section";
+import { PageHero } from "@/components/sections/PageHero";
+import type { Author } from "@/data/types";
+import { getAuthors, getPostsByAuthor } from "@/lib/content";
+import PageLayout from "@/layouts/PageLayout.astro";
+
+export const getStaticPaths = (() =>
+  getAuthors().map((author) => ({
+    params: { slug: author.slug },
+    props: { author },
+  }))) satisfies GetStaticPaths;
+
+interface Props {
+  author: Author;
+}
+
+const { author } = Astro.props;
+const posts = getPostsByAuthor(author.slug);
+const breadcrumbs = [
+  { label: "Home", href: "/" },
+  { label: "Blog", href: "/blog" },
+  { label: author.name, href: `/blog/authors/${author.slug}` },
+];
+---
+
+<PageLayout title={author.name} description={author.bio}>
+  <PageHero
+    reviewId="AU-01"
+    title={author.name}
+    intro={author.bio}
+    breadcrumbs={breadcrumbs}
+  >
+    <div slot="meta" class="flex flex-col gap-4">
+      <p class="text-sm text-muted-foreground">{author.role}</p>
+      {author.links.length > 0 && (
+        <ul class="flex flex-wrap gap-x-6 gap-y-2 text-sm">
+          {author.links.map((link) => (
+            <li>
+              <TextLink href={link.href} newTab>
+                {link.label}
+              </TextLink>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  </PageHero>
+
+  <Section reviewId="AU-02" aria-labelledby="posts-title">
+    <Container className="flex flex-col gap-12">
+      <h2 id="posts-title" class="text-h2">
+        Articles by {author.name}
+      </h2>
+      <PostList posts={posts} />
+    </Container>
+  </Section>
+</PageLayout>

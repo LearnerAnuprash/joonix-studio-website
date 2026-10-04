@@ -1,0 +1,68 @@
+---
+import { ArrowLink } from "@/components/common/ArrowLink";
+import { Container, Grid } from "@/components/layout/Container";
+import { Section } from "@/components/layout/Section";
+import { CaseStudyCard } from "@/components/sections/CaseStudyCard";
+import { CtaBand } from "@/components/sections/CtaBand";
+import { PageHero } from "@/components/sections/PageHero";
+import { getSite, getWork, serviceLabel } from "@/lib/content";
+import { whatsappLink } from "@/lib/site-links";
+import PageLayout from "@/layouts/PageLayout.astro";
+
+const site = getSite();
+const work = getWork();
+const breadcrumbs = [
+  { label: "Home", href: "/" },
+  { label: "Work", href: "/work" },
+];
+---
+
+<PageLayout
+  title="Work"
+  description="Case studies from Joonix Studio: the problem, what we built, the stack, and what changed for the business after launch."
+>
+  <PageHero
+    reviewId="W-01"
+    title="Work"
+    intro="Case studies from projects we have shipped: the problem, what we built, and what changed after launch."
+    breadcrumbs={breadcrumbs}
+  />
+
+  <Section reviewId="W-02" aria-label="Case studies">
+    <Container className="flex flex-col gap-20 md:gap-28">
+      {work.length > 0 ? (
+        work.map((item, index) => (
+          <CaseStudyCard
+            work={item}
+            headingLevel="h2"
+            serviceLabels={item.services.map(serviceLabel)}
+            layout={index % 2 === 0 ? "media-start" : "media-end"}
+          />
+        ))
+      ) : (
+        <Grid className="gap-y-6">
+          <h2 class="col-span-full text-h3 lg:col-span-5">
+            Case studies are on their way
+          </h2>
+          <div class="col-span-full flex flex-col items-start gap-6 lg:col-span-6 lg:col-start-7">
+            <p class="text-lead text-muted-foreground">
+              We publish a project only with the client's permission and real
+              numbers from after launch. On a discovery call we can walk you
+              through recent work that fits what you need.
+            </p>
+            <ArrowLink href={site.cta.href}>Book a discovery call</ArrowLink>
+          </div>
+        </Grid>
+      )}
+    </Container>
+  </Section>
+
+  <CtaBand
+    tone="inverse"
+    title="Want results like these for your business?"
+    body="Tell us what you sell and who buys it. We will tell you what we would build, what it costs, and how long it takes."
+    action={site.cta}
+    whatsapp={whatsappLink(site)}
+    promise={site.promises.reply}
+  />
+</PageLayout>

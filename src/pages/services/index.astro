@@ -1,0 +1,108 @@
+---
+import { ArrowRightIcon, CheckIcon } from "lucide-react";
+
+import { Container, Grid } from "@/components/layout/Container";
+import { Section } from "@/components/layout/Section";
+import { CtaBand } from "@/components/sections/CtaBand";
+import { PageHero } from "@/components/sections/PageHero";
+import { ProcessSteps } from "@/components/sections/ProcessSteps";
+import { SectionHeader } from "@/components/sections/SectionHeader";
+import { Button } from "@/components/ui/button";
+import { formatMoney } from "@/lib/format";
+import { getProcess, getServices, getSite } from "@/lib/content";
+import { whatsappLink } from "@/lib/site-links";
+import PageLayout from "@/layouts/PageLayout.astro";
+
+const site = getSite();
+const services = getServices();
+const breadcrumbs = [
+  { label: "Home", href: "/" },
+  { label: "Services", href: "/services" },
+];
+---
+
+<PageLayout
+  title="Services"
+  description="Website design and application development from Joonix Studio in Kathmandu. Written scope, fixed price, weekly previews and a care plan after launch."
+>
+  <PageHero
+    reviewId="S-01"
+    title="Services"
+    intro="We do two things: websites and online shops, and web and mobile apps. Both start with a free call and a written, fixed quote, and both come with a care plan after launch."
+    breadcrumbs={breadcrumbs}
+  />
+
+  <Section reviewId="S-02" aria-label="Our services">
+    <Container className="flex flex-col">
+      {services.map((service, index) => (
+        <article
+          aria-labelledby={`service-${service.slug}`}
+          class:list={[
+            "reveal border-t border-border py-12 md:py-16",
+            index === services.length - 1 && "border-b",
+          ]}
+        >
+          <Grid className="gap-y-8">
+            <div class="col-span-full flex flex-col items-start gap-6 lg:col-span-5">
+              <h2 id={`service-${service.slug}`} class="text-h2">
+                {service.title}
+              </h2>
+              <p class="text-sm text-muted-foreground tabular">
+                From{" "}
+                <span class="text-h4 text-foreground">
+                  {formatMoney(service.priceFrom)}
+                </span>
+              </p>
+              <Button asChild variant="outline">
+                <a href={`/services/${service.slug}`}>
+                  {service.title} in detail
+                  <ArrowRightIcon />
+                </a>
+              </Button>
+            </div>
+            <div class="col-span-full flex flex-col gap-8 lg:col-span-7 lg:col-start-6">
+              <p class="text-lead text-muted-foreground">{service.answer}</p>
+              <ul class="grid gap-x-(--col-gap) gap-y-3 sm:grid-cols-2">
+                {service.highlights.map((item) => (
+                  <li class="flex items-start gap-3">
+                    <CheckIcon
+                      aria-hidden="true"
+                      className="mt-1 size-5 shrink-0"
+                    />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </Grid>
+        </article>
+      ))}
+    </Container>
+  </Section>
+
+  <Section
+    tone="inverse"
+    ambient="soft"
+    reviewId="S-03"
+    aria-labelledby="process-title"
+  >
+    <Container className="flex flex-col gap-16">
+      <SectionHeader
+        id="process-title"
+        title="How every project runs"
+        intro="Websites and apps follow the same four steps, so you always know what happens next and what it costs."
+      />
+      <ProcessSteps steps={getProcess()} />
+    </Container>
+  </Section>
+
+  <CtaBand
+    reviewId="S-04"
+    tone="base"
+    title="Not sure which one you need?"
+    body="Tell us what the business does and where it is stuck. We will tell you plainly whether you need a website, an app, both, or neither yet."
+    action={site.cta}
+    whatsapp={whatsappLink(site)}
+    promise={site.promises.reply}
+  />
+</PageLayout>

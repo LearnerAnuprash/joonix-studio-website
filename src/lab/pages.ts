@@ -1,5 +1,7 @@
 import type { AstroComponentFactory } from "astro/runtime/server/index.js";
 
+import Components from "./Components.astro";
+import ContactStates from "./ContactStates.astro";
 import Foundations from "./Foundations.astro";
 import HeroLab from "./HeroLab.astro";
 import LabIndex from "./LabIndex.astro";
@@ -24,6 +26,19 @@ export const labPages: LabPage[] = [
     title: "Foundations",
     summary: "Palette, themes and tones, type, spacing, focus, grid and icons.",
     component: Foundations,
+  },
+  {
+    slug: "components",
+    title: "Components",
+    summary: "Every component and its states, in both themes and every tone.",
+    component: Components,
+  },
+  {
+    slug: "contact-states",
+    title: "Contact form states",
+    summary:
+      "Empty, field errors, submitting, success, server failure and offline.",
+    component: ContactStates,
   },
   {
     slug: "hero/ridge",

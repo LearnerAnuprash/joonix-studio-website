@@ -1,0 +1,94 @@
+---
+import { Container } from "@/components/layout/Container";
+import { Section } from "@/components/layout/Section";
+import { FeaturedPost } from "@/components/content/FeaturedPost";
+import { PostList } from "@/components/content/PostList";
+import { PostPagination } from "@/components/content/PostPagination";
+import { SearchBox } from "@/components/content/SearchBox";
+import { TagFilter } from "@/components/content/TagFilter";
+import { CtaBand } from "@/components/sections/CtaBand";
+import { PageHero } from "@/components/sections/PageHero";
+import type { NavItem, PostSummary, Tag } from "@/data/types";
+import { getSite } from "@/lib/content";
+import { whatsappLink } from "@/lib/site-links";
+import PageLayout from "./PageLayout.astro";
+
+interface Props {
+  title: string;
+  heading: string;
+  intro: string;
+  description: string;
+  breadcrumbs: NavItem[];
+  posts: PostSummary[];
+  tags: Tag[];
+  currentTag?: string;
+  current: number;
+  total: number;
+  basePath: string;
+  featured?: PostSummary;
+  noindex?: boolean;
+}
+
+const {
+  title,
+  heading,
+  intro,
+  description,
+  breadcrumbs,
+  posts,
+  tags,
+  currentTag,
+  current,
+  total,
+  basePath,
+  featured,
+  noindex = false,
+} = Astro.props;
+const site = getSite();
+---
+
+<PageLayout title={title} description={description} noindex={noindex}>
+  <PageHero
+    reviewId="B-01"
+    title={heading}
+    intro={intro}
+    breadcrumbs={breadcrumbs}
+  >
+    <div data-review-id="B-02" class="mt-10">
+      <SearchBox />
+    </div>
+  </PageHero>
+
+  <Section reviewId="B-03" spacing="none" className="pt-12 pb-(--section-pad)">
+    <Container className="flex flex-col gap-12 md:gap-16">
+      <TagFilter tags={tags} current={currentTag} />
+      {featured && (
+        <div data-review-id="B-04">
+          <FeaturedPost post={featured} />
+        </div>
+      )}
+      {posts.length > 0 ? (
+        <div data-review-id="B-05">
+          <h2 class="sr-only">Articles</h2>
+          <PostList posts={posts} />
+        </div>
+      ) : (
+        !featured && (
+          <p class="text-lead text-muted-foreground">No articles here yet.</p>
+        )
+      )}
+      <div data-review-id="B-06">
+        <PostPagination current={current} total={total} basePath={basePath} />
+      </div>
+    </Container>
+  </Section>
+
+  <CtaBand
+    tone="inverse"
+    title="Have a question we have not answered?"
+    body="Ask us directly. If it comes up often, it becomes the next article."
+    action={site.cta}
+    whatsapp={whatsappLink(site)}
+    promise={site.promises.reply}
+  />
+</PageLayout>

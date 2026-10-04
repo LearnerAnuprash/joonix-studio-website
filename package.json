@@ -20,7 +20,9 @@
     "token-lint": "node scripts/token-lint.ts",
     "placeholders": "node scripts/placeholders.ts",
     "shots": "node scripts/review-shots.ts",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "js-budget": "node scripts/js-budget.ts",
+    "contrast": "node scripts/contrast-report.ts"
   },
   "dependencies": {
     "@astrojs/markdown-satteri": "0.4.2",

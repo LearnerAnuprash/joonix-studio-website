@@ -1,0 +1,443 @@
+---
+import { ArrowRightIcon, MessageCircleIcon } from "lucide-react";
+
+import { ArrowLink } from "@/components/common/ArrowLink";
+import { Rule } from "@/components/common/Rule";
+import { TextLink } from "@/components/common/TextLink";
+import { AnswerBox } from "@/components/content/AnswerBox";
+import { AuthorBox } from "@/components/content/AuthorBox";
+import { FeaturedPost } from "@/components/content/FeaturedPost";
+import { KeyTakeaways } from "@/components/content/KeyTakeaways";
+import { PostList } from "@/components/content/PostList";
+import { PostMeta } from "@/components/content/PostMeta";
+import { PostPagination } from "@/components/content/PostPagination";
+import { SearchBox } from "@/components/content/SearchBox";
+import { ShareLinks } from "@/components/content/ShareLinks";
+import { TagFilter } from "@/components/content/TagFilter";
+import { Toc } from "@/components/content/Toc";
+import { LabSection } from "@/components/lab/LabSection";
+import { Breadcrumbs } from "@/components/layout/Breadcrumbs";
+import type { Tone } from "@/components/layout/Section";
+import { CaseStudyCard } from "@/components/sections/CaseStudyCard";
+import { CheckList } from "@/components/sections/CheckList";
+import { CtaBand } from "@/components/sections/CtaBand";
+import { FaqList } from "@/components/sections/FaqList";
+import { LinkCard } from "@/components/sections/LinkCard";
+import { LogoStrip } from "@/components/sections/LogoStrip";
+import { PointGrid } from "@/components/sections/PointGrid";
+import { PriceList } from "@/components/sections/PriceList";
+import { PricingCard } from "@/components/sections/PricingCard";
+import { ProcessSteps } from "@/components/sections/ProcessSteps";
+import { QuoteBlock } from "@/components/sections/QuoteBlock";
+import { SectionHeader } from "@/components/sections/SectionHeader";
+import { StatList } from "@/components/sections/StatList";
+import { TechList } from "@/components/sections/TechList";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Field,
+  FieldDescription,
+  FieldError,
+  FieldLabel,
+} from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+import {
+  NativeSelect,
+  NativeSelectOption,
+} from "@/components/ui/native-select";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  getCommitments,
+  getPosts,
+  getPricing,
+  getProcess,
+  getServices,
+  getSite,
+  getTags,
+  getWork,
+  serviceLabel,
+} from "@/lib/content";
+import { budgetOptions } from "@/lib/enquiry";
+import { whatsappLink } from "@/lib/site-links";
+import PageLayout from "@/layouts/PageLayout.astro";
+
+const site = getSite();
+const pricing = getPricing();
+const services = getServices();
+const posts = getPosts();
+const work = getWork();
+const firstService = services[0];
+const firstPost = posts[0];
+
+const themes = [
+  { id: "dark", title: "Dark" },
+  { id: "light", title: "Light" },
+] as const;
+
+const tones: { id: Tone; title: string }[] = [
+  { id: "base", title: "Base" },
+  { id: "deep", title: "Deep" },
+  { id: "inverse", title: "Inverse" },
+  { id: "black", title: "Black" },
+];
+
+const sections = [
+  ["buttons", "Buttons"],
+  ["links", "Links, tags and rules"],
+  ["forms", "Form controls"],
+  ["navigation", "Breadcrumbs, pagination and topics"],
+  ["headers", "Section headers"],
+  ["cards", "Cards and lists"],
+  ["numbers", "Numbers, steps and points"],
+  ["pricing", "Pricing"],
+  ["faq", "Questions"],
+  ["article", "Article parts"],
+  ["prose", "Prose"],
+  ["cta", "Call to action band"],
+] as const;
+
+const quote = {
+  text: "Perfection is achieved, not when there is nothing more to add, but when there is nothing left to take away.",
+  name: "Antoine de Saint-Exupéry",
+  role: "Writer",
+  company: "Wind, Sand and Stars",
+};
+
+const proseSample = `
+<h2 id="lab-prose-heading">How long does a shop take to build?</h2>
+<p>A small online shop takes about <strong>4 to 6 weeks</strong> from signed scope to launch. Read the <a href="/pricing">pricing page</a> for the details.</p>
+<ul><li>Product photos and descriptions</li><li>Payment approvals</li><li>Design sign-off</li></ul>
+<ol><li>Scope</li><li>Design</li><li>Build</li></ol>
+<blockquote><p>A shop that launches in five weeks and improves every month beats a perfect shop that launches in five months.</p></blockquote>
+<h3 id="lab-prose-sub">Order statuses</h3>
+<p>Each order moves through <code>pending</code>, <code>paid</code> and <code>shipped</code>.</p>
+<pre tabindex="0"><code>const order = await verifyPayment(token);
+if (order.status === "paid") notifyTeam(order);</code></pre>
+<table><thead><tr><th>Type</th><th>Timeline</th></tr></thead><tbody><tr><td>Catalogue site</td><td>2 to 3 weeks</td></tr><tr><td>Online shop</td><td>4 to 6 weeks</td></tr></tbody></table>
+`;
+---
+
+<PageLayout title="Components" noindex>
+  <LabSection id="components" title="Components">
+    <nav aria-label="Component sections">
+      <ul class="flex flex-wrap gap-2">
+        {sections.map(([id, title]) => (
+          <li>
+            <Badge asChild size="lg">
+              <a href={`#${id}`}>{title}</a>
+            </Badge>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  </LabSection>
+
+  <LabSection id="buttons" title="Buttons">
+    {themes.map((theme) => (
+      <div data-theme={theme.id} class="flex flex-col gap-4">
+        <h3 class="text-h4">{theme.title} theme</h3>
+        <div class="grid gap-4 md:grid-cols-2">
+          {tones.map((tone) => (
+            <div
+              data-tone={tone.id}
+              class="flex flex-col gap-5 rounded-lg border border-border p-6"
+            >
+              <p class="text-caption font-medium text-muted-foreground">
+                {tone.title}
+              </p>
+              <div class="flex flex-wrap items-center gap-3">
+                <Button>
+                  Start a project
+                  <ArrowRightIcon />
+                </Button>
+                <Button variant="outline">See pricing</Button>
+                <Button variant="secondary">Secondary</Button>
+                <Button variant="ghost">Ghost</Button>
+                <Button variant="link">Text link</Button>
+              </div>
+              <div class="flex flex-wrap items-center gap-3">
+                <Button size="sm">Small</Button>
+                <Button size="lg">Large</Button>
+                <Button
+                  size="icon"
+                  variant="outline"
+                  aria-label="Message on WhatsApp"
+                >
+                  <MessageCircleIcon />
+                </Button>
+                <Button disabled>Disabled</Button>
+                <Button variant="outline" disabled>
+                  Disabled
+                </Button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    ))}
+  </LabSection>
+
+  <LabSection id="links" title="Links, tags and rules">
+    <div class="grid gap-10 lg:grid-cols-2">
+      <div class="flex flex-col gap-6">
+        <p>
+          Inline <TextLink href="/pricing">text link</TextLink> inside a
+          sentence, and an{" "}
+          <TextLink href="https://astro.build" newTab>
+            external link
+          </TextLink>
+          .
+        </p>
+        <TextLink href="/blog" tone="soft">
+          Soft link
+        </TextLink>
+        <ArrowLink href="/services">Arrow link</ArrowLink>
+      </div>
+      <div class="flex flex-col gap-6">
+        <div class="flex flex-wrap gap-2">
+          <Badge>Outline</Badge>
+          <Badge variant="solid">Solid</Badge>
+          <Badge variant="quiet">Quiet</Badge>
+          <Badge size="sm">Small</Badge>
+          <Badge asChild size="lg">
+            <a href="#links">Link tag</a>
+          </Badge>
+        </div>
+        <Rule />
+        <Rule label="Rule with a label" />
+      </div>
+    </div>
+  </LabSection>
+
+  <LabSection id="forms" title="Form controls">
+    {themes.map((theme) => (
+      <div data-theme={theme.id} class="grid gap-4 md:grid-cols-2">
+        {(["base", "inverse"] as const).map((tone) => (
+          <div
+            data-tone={tone}
+            class="grid gap-8 rounded-lg border border-border p-6"
+          >
+            <p class="text-caption font-medium text-muted-foreground">
+              {theme.title}, {tone}
+            </p>
+            <Field>
+              <FieldLabel htmlFor={`lab-name-${theme.id}-${tone}`}>
+                Your name
+              </FieldLabel>
+              <Input
+                id={`lab-name-${theme.id}-${tone}`}
+                defaultValue="Sita Sharma"
+              />
+            </Field>
+            <Field>
+              <FieldLabel htmlFor={`lab-phone-${theme.id}-${tone}`}>
+                Phone or WhatsApp
+              </FieldLabel>
+              <FieldDescription id={`lab-phone-hint-${theme.id}-${tone}`}>
+                Optional. Add the country code if you are outside Nepal.
+              </FieldDescription>
+              <Input
+                id={`lab-phone-${theme.id}-${tone}`}
+                type="tel"
+                aria-describedby={`lab-phone-hint-${theme.id}-${tone}`}
+              />
+            </Field>
+            <Field invalid>
+              <FieldLabel htmlFor={`lab-email-${theme.id}-${tone}`}>
+                Email
+              </FieldLabel>
+              <Input
+                id={`lab-email-${theme.id}-${tone}`}
+                defaultValue="sita@"
+                aria-invalid="true"
+                aria-describedby={`lab-email-error-${theme.id}-${tone}`}
+              />
+              <FieldError id={`lab-email-error-${theme.id}-${tone}`}>
+                Email: enter an address like name@example.com.
+              </FieldError>
+            </Field>
+            <Field>
+              <FieldLabel htmlFor={`lab-budget-${theme.id}-${tone}`}>
+                Budget
+              </FieldLabel>
+              <NativeSelect id={`lab-budget-${theme.id}-${tone}`}>
+                {budgetOptions.map((option) => (
+                  <NativeSelectOption value={option.value}>
+                    {option.label}
+                  </NativeSelectOption>
+                ))}
+              </NativeSelect>
+            </Field>
+            <Field>
+              <FieldLabel htmlFor={`lab-message-${theme.id}-${tone}`}>
+                Tell us about the project
+              </FieldLabel>
+              <Textarea id={`lab-message-${theme.id}-${tone}`} />
+            </Field>
+            <Field>
+              <FieldLabel htmlFor={`lab-disabled-${theme.id}-${tone}`}>
+                Disabled
+              </FieldLabel>
+              <Input
+                id={`lab-disabled-${theme.id}-${tone}`}
+                disabled
+                defaultValue="Not editable"
+              />
+            </Field>
+          </div>
+        ))}
+      </div>
+    ))}
+  </LabSection>
+
+  <LabSection id="navigation" title="Breadcrumbs, pagination and topics">
+    <Breadcrumbs
+      items={[
+        { label: "Home", href: "/" },
+        { label: "Blog", href: "/blog" },
+        {
+          label: "How much does a website cost in Nepal in 2026?",
+          href: "#navigation",
+        },
+      ]}
+    />
+    <PostPagination current={2} total={5} basePath="/blog" />
+    <TagFilter tags={getTags()} current="payments" />
+    <SearchBox />
+  </LabSection>
+
+  <LabSection id="headers" title="Section headers">
+    <SectionHeader
+      title="What we build"
+      intro="Most clients come to us for one of two things."
+      link={{ label: "All services", href: "/services" }}
+    />
+    <SectionHeader
+      layout="stacked"
+      title="Stacked header"
+      intro="Used where the content below is narrow."
+    />
+  </LabSection>
+
+  <LabSection id="cards" title="Cards and lists">
+    {firstService && (
+      <div class="grid gap-6 md:grid-cols-2">
+        <LinkCard
+          href={`/services/${firstService.slug}`}
+          title={firstService.title}
+          description={firstService.summary}
+          meta="From Rs. 15,000"
+        />
+        <LinkCard
+          href="/pricing"
+          title="Pricing"
+          description="Clear starting points."
+        />
+      </div>
+    )}
+    {work[0] && (
+      <CaseStudyCard
+        work={work[0]}
+        serviceLabels={work[0].services.map(serviceLabel)}
+      />
+    )}
+    {firstPost && <FeaturedPost post={firstPost} />}
+    <PostList posts={posts} />
+    <CheckList items={pricing.included} />
+    {firstService && <TechList groups={firstService.tech} />}
+    <LogoStrip
+      title="Built with"
+      logos={[
+        { name: "Astro" },
+        { name: "React" },
+        { name: "Tailwind CSS" },
+        { name: "AWS" },
+        { name: "Cloudflare" },
+        { name: "Decap CMS" },
+      ]}
+    />
+    <QuoteBlock quote={quote} />
+  </LabSection>
+
+  <LabSection id="numbers" title="Numbers, steps and points" tone="inverse">
+    <StatList stats={getCommitments()} />
+    <ProcessSteps steps={getProcess()} />
+    {firstService && <PointGrid items={firstService.scope} />}
+  </LabSection>
+
+  <LabSection id="pricing" title="Pricing">
+    <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
+      {pricing.plans.map((plan) => (
+        <PricingCard plan={plan} />
+      ))}
+    </div>
+    <PriceList
+      rows={pricing.plans.map((plan) => ({
+        name: plan.name,
+        audience: plan.audience,
+        from: plan.setupMin,
+        href: "/pricing",
+      }))}
+    />
+  </LabSection>
+
+  <LabSection id="faq" title="Questions" tone="deep">
+    <FaqList faqs={pricing.faqs} />
+  </LabSection>
+
+  <LabSection id="article" title="Article parts">
+    {firstPost && (
+      <div class="grid gap-12 lg:grid-cols-12">
+        <div class="flex flex-col gap-12 lg:col-span-8">
+          <PostMeta
+            author={firstPost.author}
+            publishDate={firstPost.publishDate}
+            updatedDate={firstPost.updatedDate}
+            readingTime={firstPost.readingTime}
+          />
+          <AnswerBox answer="A small online shop takes about 4 to 6 weeks from signed scope to launch. A simple catalogue site can be ready in 2 to 3 weeks, and a custom platform takes 8 weeks or more. The build is rarely the slowest part. Product photos, descriptions and payment approvals usually are." />
+          <KeyTakeaways
+            items={[
+              "Plan for 4 to 6 weeks for a shop with online payments.",
+              "Content is the usual bottleneck.",
+              "Apply for payment merchant accounts early.",
+            ]}
+          />
+          <AuthorBox author={firstPost.author} />
+          <ShareLinks
+            client:visible
+            url={new URL("/blog", Astro.site).href}
+            title="Blog"
+          />
+        </div>
+        <div class="lg:col-span-3 lg:col-start-10">
+          <Toc
+            client:idle
+            headings={[
+              {
+                depth: 2,
+                slug: "lab-prose-heading",
+                text: "How long does a shop take to build?",
+              },
+              { depth: 3, slug: "lab-prose-sub", text: "Order statuses" },
+            ]}
+          />
+        </div>
+      </div>
+    )}
+  </LabSection>
+
+  <LabSection id="prose" title="Prose">
+    <div class="prose" set:html={proseSample} />
+  </LabSection>
+
+  <div id="cta">
+    <CtaBand
+      title="Tell us what you are building."
+      body="Book a free 30 minute call. You leave with straight advice, even if we are not the right fit."
+      action={site.cta}
+      whatsapp={whatsappLink(site)}
+      promise={site.promises.reply}
+    />
+  </div>
+</PageLayout>

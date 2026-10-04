@@ -1,0 +1,94 @@
+---
+import { Container, Grid } from "@/components/layout/Container";
+import { Divider } from "@/components/layout/Divider";
+import { Section } from "@/components/layout/Section";
+import { RidgeLine } from "@/components/brand/RidgeLine";
+import { CtaBand } from "@/components/sections/CtaBand";
+import { PageHero } from "@/components/sections/PageHero";
+import { PointGrid } from "@/components/sections/PointGrid";
+import { SectionHeader } from "@/components/sections/SectionHeader";
+import { getAbout, getSite } from "@/lib/content";
+import { whatsappLink } from "@/lib/site-links";
+import PageLayout from "@/layouts/PageLayout.astro";
+
+const site = getSite();
+const about = getAbout();
+const breadcrumbs = [
+  { label: "Home", href: "/" },
+  { label: "About", href: "/about" },
+];
+---
+
+<PageLayout
+  title="About"
+  description="Joonix Studio is a small software studio in Kathmandu that designs, builds and looks after websites and apps for businesses in Nepal and abroad."
+>
+  <PageHero
+    reviewId="A-01"
+    title={about.title}
+    intro={about.intro}
+    breadcrumbs={breadcrumbs}
+  />
+
+  <Section aria-label="Our story">
+    <Container>
+      <Grid className="gap-y-8">
+        <h2 class="col-span-full text-h3 lg:col-span-4">Why we started</h2>
+        <div class="reveal col-span-full flex max-w-(--container-measure) flex-col gap-6 text-lead text-muted-foreground lg:col-span-7 lg:col-start-6">
+          {about.story.map((paragraph) => (
+            <p>{paragraph}</p>
+          ))}
+        </div>
+      </Grid>
+    </Container>
+  </Section>
+
+  <Section
+    tone="deep"
+    ambient="horizon"
+    spacing="none"
+    reviewId="A-02"
+    aria-labelledby="peaks-title"
+    className="overflow-x-clip pt-(--section-pad)"
+  >
+    <Container className="flex flex-col gap-16">
+      <SectionHeader
+        id="peaks-title"
+        title={about.siliconPeaks.title}
+        intro={about.siliconPeaks.intro}
+      />
+      <PointGrid items={about.siliconPeaks.points} />
+    </Container>
+    <RidgeLine className="mt-(--section-pad)" />
+  </Section>
+
+  <Section reviewId="A-03" aria-labelledby="principles-title">
+    <Container className="flex flex-col gap-16">
+      <SectionHeader id="principles-title" title={about.principles.title} />
+      <PointGrid items={about.principles.items} />
+    </Container>
+  </Section>
+
+  <Divider />
+
+  <Section reviewId="A-05" aria-labelledby="work-with-title">
+    <Container className="flex flex-col gap-16">
+      <SectionHeader
+        id="work-with-title"
+        title={about.howWeWork.title}
+        intro={`${site.hours.label}. ${site.promises.reply}`}
+      />
+      <PointGrid items={about.howWeWork.items} columns={2} />
+    </Container>
+  </Section>
+
+  <CtaBand
+    reviewId="A-06"
+    tone="inverse"
+    title="Work with a team you can talk to."
+    body="Tell us about the business and what it needs next. The first call is free, and the advice is straight."
+    action={site.cta}
+    whatsapp={whatsappLink(site)}
+    promise={site.promises.reply}
+  />
+</PageLayout>

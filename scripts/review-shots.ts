@@ -33,7 +33,10 @@ const shots: { route: string; width: number; theme: string; file: string }[] =
   [];
 
 for (const theme of themes) {
-  const context = await browser.newContext({ deviceScaleFactor: 1 });
+  const context = await browser.newContext({
+    deviceScaleFactor: 1,
+    reducedMotion: "reduce",
+  });
   await context.addInitScript((value) => {
     localStorage.setItem("theme", value);
   }, theme);
