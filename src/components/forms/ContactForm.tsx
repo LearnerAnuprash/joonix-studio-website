@@ -102,62 +102,55 @@ export function ContactForm({
   const id = useId();
   const formRef = useRef<HTMLFormElement>(null);
   const statusRef = useRef<HTMLDivElement>(null);
-  const [values, setValues] = useState<EnquiryValues>({
-    ...emptyEnquiry,
-    ...preview?.values,
-  });
+  const initial: EnquiryValues = { ...emptyEnquiry, ...preview?.values };
   const [errors, setErrors] = useState<EnquiryErrors>(() =>
-    preview?.showErrors
-      ? validateEnquiry({ ...emptyEnquiry, ...preview.values })
-      : {},
+    preview?.showErrors ? validateEnquiry(initial) : {},
   );
   const [status, setStatus] = useState<ContactFormStatus>(
     preview?.status ?? "idle",
   );
-  const [planTouched, setPlanTouched] = useState(false);
+  const [submitted, setSubmitted] = useState<EnquiryValues>(initial);
+  const [planChoice, setPlanChoice] = useState<string | null>(null);
   const urlPlan = useSyncExternalStore(
     subscribeNothing,
     readPlanParam,
     readServerPlan,
   );
   const mountedAt = useRef(0);
+  const plan =
+    planChoice ?? (preview ? initial.plan : (urlPlan ?? initial.plan));
 
   useEffect(() => {
     mountedAt.current = Date.now();
   }, []);
 
-  const current: EnquiryValues = {
-    ...values,
-    plan: !planTouched && !preview && urlPlan ? urlPlan : values.plan,
-  };
-
   useEffect(() => {
     if (status === "success" && !preview) statusRef.current?.focus();
   }, [status, preview]);
 
-  const update = (field: EnquiryField, value: string) => {
-    if (field === "plan") setPlanTouched(true);
-    setValues((previous) => ({ ...previous, [field]: value }));
-    if (errors[field]) {
-      setErrors((previous) => {
-        const next = { ...previous };
-        delete next[field];
-        return next;
-      });
-    }
+  const clearError = (field: EnquiryField) => {
+    if (!errors[field]) return;
+    setErrors((previous) => {
+      const next = { ...previous };
+      delete next[field];
+      return next;
+    });
   };
 
   const submit = async (event: SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (preview || status === "submitting") return;
 
-    const nextErrors = validateEnquiry(current);
+    const form = event.currentTarget;
+    const data = new FormData(form);
+    const values = Object.fromEntries(
+      fieldOrder.map((field) => [field, String(data.get(field) ?? "")]),
+    ) as EnquiryValues;
+    const nextErrors = validateEnquiry(values);
     setErrors(nextErrors);
     const firstInvalid = fieldOrder.find((field) => nextErrors[field]);
     if (firstInvalid) {
-      formRef.current
-        ?.querySelector<HTMLElement>(`[name="${firstInvalid}"]`)
-        ?.focus();
+      form.querySelector<HTMLElement>(`[name="${firstInvalid}"]`)?.focus();
       return;
     }
 
@@ -168,7 +161,7 @@ export function ContactForm({
 
     setStatus("submitting");
     const payload = {
-      ...Object.fromEntries(new FormData(event.currentTarget).entries()),
+      ...Object.fromEntries(data.entries()),
       startedAt: String(mountedAt.current),
       source: readSource(),
     };
@@ -182,6 +175,7 @@ export function ContactForm({
         body: JSON.stringify(payload),
       });
       if (response.ok) {
+        setSubmitted(values);
         setStatus("success");
         return;
       }
@@ -220,16 +214,22 @@ export function ContactForm({
         <div className="flex flex-col gap-3">
           <h2 className="text-h3">
             Thanks
-            {values.name.trim() ? `, ${values.name.trim().split(" ")[0]}` : ""}.
-            Your enquiry is with us.
+            {submitted.name.trim()
+              ? `, ${submitted.name.trim().split(" ")[0]}`
+              : ""}
+            . Your enquiry is with us.
           </h2>
           <p className="max-w-lg text-muted-foreground">
             {replyPromise} We sent a short confirmation to{" "}
-            {values.email.trim() || "your email"}. If it is urgent, message us
-            on WhatsApp.
+            {submitted.email.trim() || "your email"}. If it is urgent, message
+            us on WhatsApp.
           </p>
         </div>
-        <Button asChild variant="outline">
+        <Button
+          asChild
+          variant="outline"
+          className="h-auto min-h-12 py-3 whitespace-normal"
+        >
           <a href={whatsappHref} rel="noopener">
             Message us on WhatsApp
             <ArrowRightIcon />
@@ -260,8 +260,8 @@ export function ContactForm({
             autoComplete="name"
             required
             maxLength={100}
-            value={values.name}
-            onChange={(event) => update("name", event.target.value)}
+            defaultValue={initial.name}
+            onChange={() => clearError("name")}
             aria-invalid={Boolean(errors.name) || undefined}
             aria-describedby={describedBy("name")}
           />
@@ -275,8 +275,8 @@ export function ContactForm({
             type="email"
             autoComplete="email"
             required
-            value={values.email}
-            onChange={(event) => update("email", event.target.value)}
+            defaultValue={initial.email}
+            onChange={() => clearError("email")}
             aria-invalid={Boolean(errors.email) || undefined}
             aria-describedby={describedBy("email")}
           />
@@ -294,8 +294,8 @@ export function ContactForm({
             autoComplete="tel"
             inputMode="tel"
             maxLength={20}
-            value={values.phone}
-            onChange={(event) => update("phone", event.target.value)}
+            defaultValue={initial.phone}
+            onChange={() => clearError("phone")}
             aria-invalid={Boolean(errors.phone) || undefined}
             aria-describedby={describedBy("phone", true)}
             className="md:max-w-[calc(50%-12px)]"
@@ -307,8 +307,11 @@ export function ContactForm({
           <NativeSelect
             id={`${id}-plan`}
             name="plan"
-            value={current.plan}
-            onChange={(event) => update("plan", event.target.value)}
+            value={plan}
+            onChange={(event) => {
+              setPlanChoice(event.target.value);
+              clearError("plan");
+            }}
             aria-invalid={Boolean(errors.plan) || undefined}
             aria-describedby={describedBy("plan")}
           >
@@ -325,8 +328,8 @@ export function ContactForm({
           <NativeSelect
             id={`${id}-budget`}
             name="budget"
-            value={values.budget}
-            onChange={(event) => update("budget", event.target.value)}
+            defaultValue={initial.budget}
+            onChange={() => clearError("budget")}
             aria-invalid={Boolean(errors.budget) || undefined}
             aria-describedby={describedBy("budget")}
           >
@@ -351,8 +354,8 @@ export function ContactForm({
             name="message"
             required
             maxLength={4000}
-            value={values.message}
-            onChange={(event) => update("message", event.target.value)}
+            defaultValue={initial.message}
+            onChange={() => clearError("message")}
             aria-invalid={Boolean(errors.message) || undefined}
             aria-describedby={describedBy("message", true)}
           />

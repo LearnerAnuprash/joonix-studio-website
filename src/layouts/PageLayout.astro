@@ -29,10 +29,10 @@ const year = new Date().getFullYear();
     currentPath={currentPath}
     siteName={site.name}
   >
-    <ThemeToggle slot="themeToggle" client:idle />
+    <ThemeToggle slot="themeToggle" client:intent />
     <MobileNav
       slot="mobileNav"
-      client:media="(max-width: 63.99rem)"
+      client:intent
       nav={site.nav}
       cta={site.cta}
       currentPath={currentPath}
