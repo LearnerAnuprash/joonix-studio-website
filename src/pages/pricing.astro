@@ -34,9 +34,12 @@ const breadcrumbs = [
     breadcrumbs={breadcrumbs}
   />
 
-  <Section reviewId="P-02" aria-label="Website plans">
+  <Section reviewId="P-02" aria-labelledby="plans-title">
     <Container className="flex flex-col gap-6">
-      <div class="grid gap-6 lg:grid-cols-3">
+      <h2 id="plans-title" class="sr-only">
+        Website plans
+      </h2>
+      <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
         {pricing.plans.map((plan) => (
           <PricingCard plan={plan} className="reveal" />
         ))}

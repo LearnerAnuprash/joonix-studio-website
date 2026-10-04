@@ -366,7 +366,7 @@ if (order.status === "paid") notifyTeam(order);</code></pre>
   </LabSection>
 
   <LabSection id="pricing" title="Pricing">
-    <div class="grid gap-6 lg:grid-cols-3">
+    <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
       {pricing.plans.map((plan) => (
         <PricingCard plan={plan} />
       ))}
