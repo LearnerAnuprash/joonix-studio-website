@@ -22,3 +22,11 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+#LLM setup
+.agents
+.claude
+Design.md
+skills-lock.json
+CLAUDE.md
+AGENTS.md
