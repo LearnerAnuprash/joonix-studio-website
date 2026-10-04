@@ -1,0 +1,63 @@
+---
+import { Font } from "astro:assets";
+
+import { SkipLink } from "@/components/layout/SkipLink";
+import { site } from "@/data/site";
+import { themeColor } from "@/styles/palette";
+import "@/styles/global.css";
+
+interface Props {
+  title?: string;
+  description?: string;
+  noindex?: boolean;
+}
+
+const { title, description = site.positioning, noindex = false } = Astro.props;
+
+const pageTitle = title
+  ? `${title} | ${site.name}`
+  : `${site.name}. ${site.positioning}`;
+
+const themeScript = `(function(){var d=document.documentElement,t;try{t=localStorage.getItem("theme")}catch(e){}if(t==="light"||t==="dark"){d.dataset.theme=t;var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute("content",${JSON.stringify(themeColor)}[t])}})();`;
+
+const speculationRules = JSON.stringify({
+  prefetch: [
+    {
+      where: {
+        and: [
+          { href_matches: "/*" },
+          { not: { href_matches: ["/api/*", "/admin/*"] } },
+        ],
+      },
+      eagerness: "moderate",
+    },
+  ],
+});
+---
+
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+    <meta name="theme-color" content={themeColor.dark} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <Font
+      cssVariable="--font-poppins"
+      preload={[
+        { weight: 400, subset: "latin" },
+        { weight: 500, subset: "latin" },
+      ]}
+    />
+    <script is:inline set:html={themeScript} />
+    <script type="speculationrules" is:inline set:html={speculationRules} />
+  </head>
+  <body data-tone="base">
+    <SkipLink />
+    <slot />
+  </body>
+</html>

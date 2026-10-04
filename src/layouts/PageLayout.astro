@@ -1,0 +1,44 @@
+---
+import { MobileNav } from "@/components/layout/MobileNav";
+import type { Tone } from "@/components/layout/Section";
+import { SiteHeader } from "@/components/layout/SiteHeader";
+import { ThemeToggle } from "@/components/layout/ThemeToggle";
+import { site } from "@/data/site";
+import BaseLayout from "./BaseLayout.astro";
+
+interface Props {
+  title?: string;
+  description?: string;
+  noindex?: boolean;
+  headerTone?: Tone;
+}
+
+const { headerTone = "base", ...rest } = Astro.props;
+const currentPath = Astro.url.pathname;
+---
+
+<BaseLayout {...rest}>
+  <SiteHeader
+    tone={headerTone}
+    nav={site.nav}
+    cta={site.cta}
+    currentPath={currentPath}
+    siteName={site.name}
+  >
+    <ThemeToggle slot="themeToggle" client:idle />
+    <MobileNav
+      slot="mobileNav"
+      client:media="(max-width: 63.99rem)"
+      nav={site.nav}
+      cta={site.cta}
+      currentPath={currentPath}
+      siteName={site.name}
+      positioning={site.positioning}
+      className="lg:hidden"
+    />
+  </SiteHeader>
+  <main id="main">
+    <slot />
+  </main>
+  <slot name="footer" />
+</BaseLayout>
