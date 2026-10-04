@@ -1,0 +1,23 @@
+---
+import type { GetStaticPaths } from "astro";
+import { PUBLIC_ENABLE_LAB } from "astro:env/client";
+
+import { labPages, type LabPage } from "@/lab/pages";
+
+export const getStaticPaths = (() => {
+  if (!PUBLIC_ENABLE_LAB) return [];
+  return labPages.map((page) => ({
+    params: { slug: page.slug },
+    props: { page },
+  }));
+}) satisfies GetStaticPaths;
+
+interface Props {
+  page: LabPage;
+}
+
+const { page } = Astro.props;
+const Page = page.component;
+---
+
+<Page {...page.props} pages={labPages} />

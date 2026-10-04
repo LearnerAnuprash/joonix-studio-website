@@ -28,5 +28,11 @@ pnpm-debug.log*
 .claude
 Design.md
 skills-lock.json
-CLAUDE.md
-AGENTS.md
+implementation-plan.md
+plan
+# CLAUDE.md
+# AGENTS.md
+src/lib/cn-tables.ts
+review/
+test-results/
+playwright-report/

@@ -1,0 +1,39 @@
+---
+import { ArrowRightIcon } from "lucide-react";
+
+import { Container } from "@/components/layout/Container";
+import { Section } from "@/components/layout/Section";
+import PageLayout from "@/layouts/PageLayout.astro";
+
+interface Props {
+  pages: { slug: string | undefined; title: string; summary: string }[];
+}
+
+const links = Astro.props.pages.filter((page) => page.slug !== undefined);
+---
+
+<PageLayout title="Lab" noindex>
+  <Section spacing="hero">
+    <Container className="flex flex-col gap-12">
+      <h1 class="text-h1">Lab</h1>
+      <ul class="border-t border-border">
+        {links.map((page) => (
+          <li class="border-b border-border">
+            <a
+              href={`/lab/${page.slug}`}
+              class="group flex items-center justify-between gap-6 py-6"
+            >
+              <span class="flex flex-col gap-1">
+                <span class="text-h4">{page.title}</span>
+                <span class="text-sm text-muted-foreground">
+                  {page.summary}
+                </span>
+              </span>
+              <ArrowRightIcon className="size-6 shrink-0 transition-transform duration-150 group-hover:translate-x-1" />
+            </a>
+          </li>
+        ))}
+      </ul>
+    </Container>
+  </Section>
+</PageLayout>
