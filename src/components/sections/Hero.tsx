@@ -46,8 +46,10 @@ function RidgeHero({ headline, intro, action, note }: HeroProps) {
     <Section
       tone="deep"
       spacing="none"
+      ambient="horizon"
+      drift
       reviewId="H-01"
-      className="overflow-x-clip pt-(--hero-pad-top)"
+      className="under-header overflow-x-clip"
     >
       <Container>
         <Grid>
@@ -64,7 +66,7 @@ function RidgeHero({ headline, intro, action, note }: HeroProps) {
           />
         </Grid>
       </Container>
-      <RidgeLine className="mt-24 lg:mt-32" />
+      <RidgeLine className="mt-16 lg:mt-20" />
     </Section>
   );
 }
@@ -73,9 +75,11 @@ function WorkHero({ headline, intro, action, note }: HeroProps) {
   return (
     <Section
       tone="deep"
-      spacing="hero"
+      spacing="none"
+      ambient="horizon"
+      drift
       reviewId="H-01"
-      className="overflow-x-clip"
+      className="under-header overflow-x-clip pb-(--section-pad)"
     >
       <Container>
         <Grid className="gap-y-16 lg:items-end">

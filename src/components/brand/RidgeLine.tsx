@@ -8,7 +8,10 @@ export function RidgeLine({ className }: RidgeLineProps) {
   return (
     <div
       aria-hidden="true"
-      className={cn("h-24 w-full bg-muted md:h-32 lg:h-40", className)}
+      className={cn(
+        "h-20 w-full border-t border-border bg-muted/30 md:h-24 lg:h-32",
+        className,
+      )}
     />
   );
 }
