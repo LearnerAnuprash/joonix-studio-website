@@ -1,0 +1,288 @@
+---
+import {
+  ArrowRightIcon,
+  ArrowUpRightIcon,
+  CheckIcon,
+  CircleAlertIcon,
+  MailIcon,
+  MenuIcon,
+  MessageCircleIcon,
+  MoonIcon,
+  PhoneIcon,
+  SunIcon,
+  XIcon,
+} from "lucide-react";
+
+import { ContrastReadout } from "@/components/lab/ContrastReadout";
+import { LabSection } from "@/components/lab/LabSection";
+import { ToneSample } from "@/components/lab/ToneSample";
+import type { Tone } from "@/components/layout/Section";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import PageLayout from "@/layouts/PageLayout.astro";
+import { palette } from "@/styles/palette";
+
+const swatches = [
+  { name: "Black", value: palette.black, token: "bg-(--c-black)" },
+  { name: "Ink", value: palette.ink, token: "bg-(--c-ink)" },
+  { name: "Earth", value: palette.earth, token: "bg-(--c-earth)" },
+  { name: "Cream", value: palette.cream, token: "bg-(--c-cream)" },
+];
+
+const themes = [
+  { id: "dark", title: "Dark theme" },
+  { id: "light", title: "Light theme" },
+] as const;
+
+const tones: { id: Tone; title: string }[] = [
+  { id: "base", title: "Base" },
+  { id: "deep", title: "Deep" },
+  { id: "inverse", title: "Inverse" },
+  { id: "black", title: "Black" },
+];
+
+const typeScale = [
+  {
+    className: "text-display",
+    name: "Display",
+    spec: "48 to 112 px, 1.02, -0.04em",
+    sample: "Websites and apps that do their job.",
+  },
+  {
+    className: "text-h1",
+    name: "Heading 1",
+    spec: "40 to 72 px, 1.06, -0.03em",
+    sample: "Pricing",
+  },
+  {
+    className: "text-h2",
+    name: "Heading 2",
+    spec: "32 to 48 px, 1.12, -0.02em",
+    sample: "How much does a website cost in Nepal?",
+  },
+  {
+    className: "text-h3",
+    name: "Heading 3",
+    spec: "24 to 30 px, 1.25, -0.015em",
+    sample: "Written scope and quote",
+  },
+  {
+    className: "text-h4",
+    name: "Heading 4",
+    spec: "20 to 22 px, 1.35, -0.01em",
+    sample: "Launch and care",
+  },
+  {
+    className: "text-lead",
+    name: "Lead",
+    spec: "19 to 22 px, 1.47",
+    sample:
+      "We design, build and look after websites and apps, from a first online shop to a custom platform.",
+  },
+  {
+    className: "text-body",
+    name: "Body",
+    spec: "17.5 px on 28 px",
+    sample:
+      "You see progress every week on a private preview link. When the build is done, we launch, show your team how to edit content, and look after hosting, updates and backups on a monthly care plan.",
+  },
+  {
+    className: "text-small",
+    name: "Small",
+    spec: "15 px on 24 px",
+    sample:
+      "Setup Rs. 60,000 to 1,50,000. Care plan Rs. 4,000 to 7,000 per month.",
+  },
+  {
+    className: "text-caption",
+    name: "Caption",
+    spec: "14 px on 20 px",
+    sample: "Updated 4 October 2026",
+  },
+];
+
+const displayWeights = [
+  { className: "font-normal", label: "400" },
+  { className: "font-medium", label: "500" },
+  { className: "font-semibold", label: "600" },
+];
+
+const spacing = [8, 16, 24, 32, 40, 48, 64, 80, 96, 128, 160];
+
+const icons = [
+  ArrowRightIcon,
+  ArrowUpRightIcon,
+  CheckIcon,
+  CircleAlertIcon,
+  MailIcon,
+  PhoneIcon,
+  MessageCircleIcon,
+  MenuIcon,
+  XIcon,
+  SunIcon,
+  MoonIcon,
+];
+
+const columns = Array.from({ length: 12 }, (_, index) => index + 1);
+---
+
+<PageLayout title="Foundations" noindex>
+  <LabSection id="palette" title="Palette">
+    <ul class="grid grid-cols-2 gap-4 lg:grid-cols-4">
+      {swatches.map((swatch) => (
+        <li class="flex flex-col gap-3">
+          <span
+            class:list={[
+              "block aspect-[4/3] rounded-lg border border-border",
+              swatch.token,
+            ]}
+          />
+          <span class="flex justify-between text-sm">
+            <span class="font-medium">{swatch.name}</span>
+            <span class="text-muted-foreground tabular-nums">
+              {swatch.value}
+            </span>
+          </span>
+        </li>
+      ))}
+    </ul>
+  </LabSection>
+
+  <LabSection id="tones" title="Themes and tones">
+    {themes.map((theme) => (
+      <div class="flex flex-col gap-6">
+        <h3 class="text-h3">{theme.title}</h3>
+        <div
+          data-theme={theme.id}
+          class="grid gap-4 md:grid-cols-2 xl:grid-cols-4"
+        >
+          {tones.map((tone) => (
+            <ToneSample
+              tone={tone.id}
+              title={tone.title}
+              inputId={`email-${theme.id}-${tone.id}`}
+            >
+              <ContrastReadout slot="readout" client:load />
+            </ToneSample>
+          ))}
+        </div>
+      </div>
+    ))}
+  </LabSection>
+
+  <LabSection id="type" title="Type">
+    <div class="flex flex-col">
+      {typeScale.map((style) => (
+        <div class="grid gap-3 border-t border-border py-8 lg:grid-cols-12 lg:gap-8">
+          <p class="flex flex-col gap-1 text-caption lg:col-span-3">
+            <span class="font-medium">{style.name}</span>
+            <span class="text-muted-foreground">{style.spec}</span>
+          </p>
+          <p class:list={[style.className, "max-w-measure lg:col-span-9"]}>
+            {style.sample}
+          </p>
+        </div>
+      ))}
+    </div>
+    <div class="flex flex-col gap-10">
+      <h3 class="text-h3">Display weight</h3>
+      {displayWeights.map((weight) => (
+        <div class="grid gap-3 border-t border-border pt-8 lg:grid-cols-12 lg:gap-8">
+          <p class="text-caption font-medium lg:col-span-3">{weight.label}</p>
+          <p class:list={["text-display lg:col-span-9", weight.className]}>
+            Built in Nepal.
+          </p>
+        </div>
+      ))}
+    </div>
+  </LabSection>
+
+  <LabSection id="spacing" title="Spacing and radius">
+    <ul class="flex flex-col gap-3">
+      {spacing.map((size) => (
+        <li class="flex items-center gap-6">
+          <span class="w-12 text-caption text-muted-foreground tabular-nums">
+            {size}
+          </span>
+          <span
+            class="block h-4 rounded-xs bg-foreground"
+            style={{ width: `${size}px` }}
+          />
+        </li>
+      ))}
+    </ul>
+    <div class="flex flex-wrap gap-6">
+      <div class="flex flex-col gap-3">
+        <span class="block size-32 rounded-md border border-input bg-muted"></span>
+        <span class="text-caption text-muted-foreground">6 px, controls</span>
+      </div>
+      <div class="flex flex-col gap-3">
+        <span class="block size-32 rounded-lg border border-input bg-muted"></span>
+        <span class="text-caption text-muted-foreground">
+          10 px, containers
+        </span>
+      </div>
+      <div class="flex flex-col gap-3">
+        <span class="block size-32 rounded-lg border border-border"></span>
+        <span class="text-caption text-muted-foreground">Hairline</span>
+      </div>
+      <div class="flex flex-col gap-3">
+        <span class="block size-32 rounded-lg border border-input"></span>
+        <span class="text-caption text-muted-foreground">Control border</span>
+      </div>
+    </div>
+  </LabSection>
+
+  <LabSection id="focus" title="Focus">
+    <div class="grid gap-4 md:grid-cols-3">
+      {tones.slice(0, 3).map((tone) => (
+        <div
+          data-tone={tone.id}
+          class="flex flex-wrap items-center gap-6 rounded-lg border border-border p-6"
+        >
+          <Button size="sm" className="outline-2 outline-offset-2 outline-ring">
+            Start a project
+          </Button>
+          <a
+            href="#focus"
+            class="link rounded-xs outline-2 outline-offset-2 outline-ring"
+          >
+            Read more
+          </a>
+          <Input
+            aria-label={`Focused field on ${tone.title}`}
+            className="border-foreground outline-2 outline-offset-2 outline-ring"
+            defaultValue="you@company.com"
+          />
+        </div>
+      ))}
+    </div>
+  </LabSection>
+
+  <LabSection id="grid" title="Grid">
+    <div class="page-grid gap-y-4">
+      {columns.map((column) => (
+        <span
+          class:list={[
+            "flex h-24 items-end justify-center rounded-md bg-muted pb-2 text-caption text-muted-foreground",
+            column > 4 && "hidden md:flex",
+            column > 8 && "md:hidden lg:flex",
+          ]}
+        >
+          {column}
+        </span>
+      ))}
+    </div>
+  </LabSection>
+
+  <LabSection id="icons" title="Icons">
+    <ul class="flex flex-wrap gap-6">
+      {icons.map((Icon) => (
+        <li class="flex items-center gap-3 rounded-md border border-border p-3">
+          <Icon size={20} />
+          <Icon size={24} />
+        </li>
+      ))}
+    </ul>
+  </LabSection>
+</PageLayout>
